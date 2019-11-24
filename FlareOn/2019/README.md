@@ -18,3 +18,8 @@ Table of Contents
 - [10 - Mugatu](10)
 - [11 - vv_max](11)
 - [12 - help](12)
+
+Screenshot
+----------
+
+![Achievements screen](solved-screenshot.png)

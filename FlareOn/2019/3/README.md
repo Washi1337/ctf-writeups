@@ -7,7 +7,7 @@
 
 The third challenge was titled Flarebear and was an APK file to be installed on an Android device. The app is a simple game that allows you to create a virtual pet bear, and feed him, play with him and clean him. The note that came along with it told us to make the bear happy in some way or another.
 
-SCREENSHOT
+![Figure 0](screenshot.png)
 
 To reverse engineer APK files, one can use tools like [dex2jar](https://github.com/pxb1988/dex2jar) to convert the *.apk file to a *.jar file:
 

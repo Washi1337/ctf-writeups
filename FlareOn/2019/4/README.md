@@ -14,7 +14,7 @@ You'll need to make the right moves to solve this one. Good luck!
 
 Leading me to believe we need to play a game of (hacker)chess!
 
-SCREENSHOT
+![Figure 0](screenshot.png)
 
 Now if you are anything like me, I have no clue about how to play chess. I know how the pieces move across the board, but that's about it. This is when I decided to start reversing the ChessAI.so binary. That seemed to be an easier job than teaching myself chess in a short period of time. 
 

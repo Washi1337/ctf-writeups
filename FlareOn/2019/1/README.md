@@ -48,7 +48,7 @@ private bool isValidWeaponCode(string s)
 
 From the looks of it, it is a normal XOR cipher with a single character key 'A'. The ciphertext is then compared to another hardcoded ciphtertext. Since XOR is both an encryption and a decryption function, we can just run the hardcoded ciphertext through the same function, and reveal that the next password is "Bagel_Cannon".
 
-Stage 3 (BUSHA 2019 only)
+Stage 3 (BHUSA 2019 only)
 -------------------------
 
 If you participated in Flare-On 2019 only, you'd be done. The third stage was only present if you participated in the BHUSA 2019 event. For the sake of completeness, I will discuss this one as well.

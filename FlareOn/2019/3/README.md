@@ -190,3 +190,5 @@ c = 2
 ```
 
 Feeding the bear 8 times, playing with him 4 times and then cleaning him twice will let the bear dance with the flag.
+
+![Final](final.gif)

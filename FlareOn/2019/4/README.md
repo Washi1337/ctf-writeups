@@ -201,7 +201,47 @@ for m in hosts:
     print(m)
 ```
 
-Then its just a matter of playing the game and choosing the only possible move for every turn, which reveals the flag.
+Then its just a matter of playing the game and choosing the only possible move for every turn:
 
-SCREENSHOT
+```
+pawn-d2-d4
+pawn-c2-c4
+knight-b1-c3
+pawn-e2-e4
+knight-g1-f3
+bishop-c1-f4
+knight-f1-e2
+bishop-e2-f3
+bishop-f4-g3
+pawn-e4-e5
+bishop-f3-c6
+bishop-c6-a8
+pawn-e5-e6
+queen-d1-h5
+queen-h5-f7
+```
+
+which reveals the flag:
+
+![Figure 2](playthrough.gif)
+
+Transcript:
+```
+DeepFLARE: Finally, a worthy opponent. Let us begin
+DeepFLARE: A fine opening
+DeepFLARE: Still within book
+DeepFLARE: Interesting gambit
+DeepFLARE: I must find counterplay
+DeepFLARE: That's risky...
+DeepFLARE: Good development, but I control the center
+DeepFLARE: A respectable sacrifice
+DeepFLARE: I am blockaded, but have an escape
+DeepFLARE: Careful! Mind your defense
+DeepFLARE: I have gained a tempo
+DeepFLARE: You have weak squares around your king
+DeepFLARE: With my next move I will seize control
+DeepFLARE: An exchange of pieces is in order
+DeepFLARE: A bold move
+DeepFLARE: LooksLikeYouLockedUpTheLookupZ@flare-on.com
+```
 

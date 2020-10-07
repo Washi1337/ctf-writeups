@@ -3,7 +3,7 @@
 
 **Time spent:** around 10 minutes
 
-**Tools used:** VSCode to edit Python
+**Tools used:** Python
 
 The first challenge of the anual flare-on CTF always starts relatively easy and this year is no exception. We are given a game written in Python, and a message that tells us to beat the game to reveal the flag.
 

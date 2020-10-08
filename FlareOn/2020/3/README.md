@@ -1,7 +1,7 @@
 3 - wednesday
 =============
 
-**Time spent:** 2 hours (1 hour probably wasted)
+**Time spent:** 2 hours
 
 **Tools used:** Ghidra, x64dbg, Cyberchef
 

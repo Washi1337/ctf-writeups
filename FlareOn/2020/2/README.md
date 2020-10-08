@@ -1,7 +1,7 @@
 2 - garbage
 ===========
 
-**Time spent:** 20 minutes
+**Time spent:** around 20 minutes
 
 **Tools used:** CFF Explorer, HxD, UPX
 
@@ -77,11 +77,11 @@ Save it, and run it. Should be fine now right?
 Fixing imports
 --------------
 
-Nope, we are still greeted with a message that `.DLL` could not be found. That's a weird file name! 
+Nope, we are still greeted with an error message:
 
 ![Figure 5](error2.png)
 
-Let's have a look at the libraries that this PE file imports.
+`.DLL`? That's a weird file name!  Let's have a look at the libraries that this PE file imports.
 
 ![Figure 6](cff3.png)
 

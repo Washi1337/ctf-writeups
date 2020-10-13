@@ -1,0 +1,1 @@
+Reverse engineer this little compiled script to figure out what you need to do to make it give you the flag (as a QR code).

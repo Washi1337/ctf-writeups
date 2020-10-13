@@ -8,6 +8,7 @@ Table of contents
 
 - [Flare On](FlareOn)
     - [2019](FlareOn/2019)
+    - [2020](FlareOn/2020)
 
 Disclaimer
 ----------

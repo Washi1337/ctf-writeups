@@ -3,7 +3,7 @@
 
 **Time spent:** 2 hours
 
-**Tools used:** Office Excel 2019, Python
+**Tools used:** Office Excel 2010, Python
 
 For the fourth challenge in the series, you are given nothing more than an Excel sheet called `report.xls`. The message tells us that the file is infected, and that we should have a look at it.
 
@@ -182,7 +182,7 @@ $ olevba report.xls
 +----------+--------------------+---------------------------------------------+
 ```
 
-While `olevba` is able to dump the actual P-Code that is run, P-Code is harder to read than normal VBA. Fortunately, there is another tool called [pcode2code](https://github.com/Big5-sec/pcode2code), which is able to decompile it back to normal VBA code. Running the code gives us an output similar to the one provided in [ActualCode.vb](ActualCode.vb).
+While `olevba` is able to dump the actual P-Code that is run, P-Code is harder to read than normal VBA. Fortunately, there is another tool called [pcode2code](https://github.com/Big5-sec/pcode2code), which is able to decompile it back to normal VBA code. Feeding `report.xls` to pcode2code gives us an output similar to the one provided in [ActualCode.vb](ActualCode.vb).
 
 The final part of the original main procedure is replaced with the following code:
 

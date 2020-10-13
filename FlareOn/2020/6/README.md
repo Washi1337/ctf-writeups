@@ -1,7 +1,7 @@
 6 - report
 ==========
 
-**Time spent:** 2 hours
+**Time spent:** 3 hours
 
 **Tools used:** Detect It Easy, exe2aut Python
 

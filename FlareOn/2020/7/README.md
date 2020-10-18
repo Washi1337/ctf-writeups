@@ -5,7 +5,7 @@
 
 **Tools used:** Wireshark, Ghidra, C#, Python
 
-Up until now, most challenges have been fairly straightforward with a clear target executable file (with the exception of challenge 4). However, the more we progress, the realistic they get in terms of an incidence response scenario. In the seventh task, we are not given a binary or script that we can just throw into a disassembler and/or debugger. Instead, we are provided with a network packet capture, along with a note that tells us a server of a company called Reynholm Industries was hacked. Our job is to figure out what had happened and what they have stolen from the server, without having access to the server itself.
+Up until now, most challenges have been fairly straightforward with a clear target executable file (with the exception of challenge 4). However, the more we progress, the more realistic they get in terms of an incident response scenario. In the seventh task, we are not given a binary or script that we can just throw into a disassembler and/or debugger. Instead, we are provided with a network packet capture, along with a note that tells us a server of a company called Reynholm Industries was hacked. Our job is to figure out what had happened and what they have stolen from the server, without having access to the server itself.
 
 Orientation
 -----------
@@ -151,7 +151,7 @@ We can see that it contains some interesting definitions like the file name, as 
 Calling procedures by hash codes
 --------------------------------
 
-How does this information help us? Let's go back to our function. The first line tells us that we are accessing the pointer at `FS + 0x30`. This is a reference to the current PEB! Then we take the offset 0xC, and dereference again, this is the pointer to the `PEB_LDR_DATA`. Finally we increase that pointer by 0x14 to get to the first `LDR_MODULE` entry in our loaded moduels list. Now that we know that, we can start retyping in Ghidra:
+How does this information help us? Let's go back to our function. The first line tells us that we are accessing the pointer at `FS + 0x30`. This is a reference to the current PEB! Then we take the offset 0xC, and dereference again, this is the pointer to the `PEB_LDR_DATA`. Finally we increase that pointer by 0x14 to get to the first `LDR_MODULE` entry in our loaded modules list. Now that we know that, we can start retyping in Ghidra:
 
 ```c
 

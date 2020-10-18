@@ -3,7 +3,7 @@
 
 **Time spent:** 3 hours
 
-**Tools used:** Detect It Easy, exe2aut Python
+**Tools used:** Detect It Easy, exe2aut, Python
 
 The sixth challenge is called codeit, a simple application that asks you for some input which is transformed into a QR code and displayed. The note tells us that if a special string is given, the QR code of the flag would be generated. 
 

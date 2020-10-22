@@ -16,7 +16,7 @@ Orientation
 
 Running the executable indeed doesn't seem to do much as the note states. No dialog box, no command prompt, nothing. How are we supposed to do a challenge like this?
 
-When I have no clue what is going on with an application, before diving deep into a disassembler, I like to use a tool like API monitor to get a rough feeling of what kind of procedures are called throughout a single execution of the program. This is typically useful for files that are dropped by an application. Furthermore, the note talks about `COMmunications`, which is probably a reference to COM. Therefore, in the filter options, I selected the following options:
+When I have no clue what is going on with an application, before diving deep into a disassembler, I like to use a tool like API monitor to get a rough feeling of what kind of procedures are called throughout a single execution of the program. This is typically useful for files that the app might be dropping. Furthermore, the note talks about `COMmunications`, which is probably a reference to COM. Therefore, in the filter options, I selected the following options:
 
 ![Figure 1](apimonitor1.png)
 
@@ -31,7 +31,7 @@ Immediately we can see some interesting things.
 - `cfs.dll` is then deleted afterwards.
 - Then another file called `credHelper.dll` is dropped in AppData, which seems to be registered as a COM service using `DllRegisterService`.
 
-Getting a hold of these files is easy; just set a breakpoint on `CreateFileW` and `WriteFile` using any debugger like x64dbg. A copy of the files can be found [here](cfs.dll) and [here](credHelper.dll).
+Getting a hold of these files is easy; just set a breakpoint on `CreateFileW` using any debugger like x64dbg to stop execution before  `cfs.dll` is removed from the disk again. `credHelper.dll` is never removed, so we can just grab it directly from our AppData folder. A copy of the files can be found [here](cfs.dll) and [here](credHelper.dll).
 
 
 Analysing credHelper.dll
@@ -360,8 +360,7 @@ ulonglong FUN_140009000(longlong driverObject)
         KeInitializeEvent(puVar1 + 0x10,0,0);
         *puVar1 = 0;
         *(puVar1 + 0x16) = 0;
-        local_138 = CmRegisterCallbackEx
-                              (FUN_140004570,&"360000",driverObject,driverObject,&ID_CALLBACK_ROUTINE,0);
+        local_138 = CmRegisterCallbackEx(FUN_140004570,&"360000",driverObject,driverObject,&ID_CALLBACK_ROUTINE,0);
     }
     if ((local_138 < 0) && (local_128 != 0)) {
         IoDeleteDevice(local_128);
@@ -425,7 +424,9 @@ This function contains a lot of code. Way too much to analyse by hand. What is i
 Getting the password with WinDbg
 --------------------------------
 
-There is enough tutorials on how to set up WinDbg. Personally, I used [this tutorial](https://www.virtualbox.org/wiki/Windows_Kernel_Debugging), since I worked with VirtualBox. The only difference is that I used the new WinDbg Preview instead of classic WinDbg. WinDbg preview can be downloaded from the Microsoft Store. And no, you don't need a Microsoft Account to download it. Just click "Cancel" when it asks you to log in after clicking "Install".
+There is a lot of tutorials on how to set up WinDbg for kernel debugging. Personally, I used [this tutorial](https://www.virtualbox.org/wiki/Windows_Kernel_Debugging), since I worked with VirtualBox, however the same principles apply for other virtual machine software. You set up a COM serial port in your VM settings, and let WinDbg connect to it.
+
+I used the new WinDbg Preview instead of classic WinDbg. WinDbg Preview can be downloaded from the Microsoft Stor for free, and no, you don't need a Microsoft Account to download it. Just click "Cancel" when it asks you to log in after clicking "Install".
 
 After rebooting the virtual machine with debugging enabled and connecting WinDbg to our virtual box instance, we want to break at the moment our `cfs.dll` driver is loaded:
 

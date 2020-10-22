@@ -93,7 +93,7 @@ void MainDialogProc(HWND hWnd,uint message,WPARAM wParam,LPARAM lParam)
 }
 ```
 
-We see references to winsock? Are we communicating with a remote host? Let's figure out where this socket object is written. A quick cross-reference shows us that it is written in the main function:
+We see references to winsock? Are we communicating with a remote host? Let's figure out where this socket object is initialized. A quick cross-reference shows us that it is written in the main function of the program:
 
 ```c
 void main(void)
@@ -104,11 +104,15 @@ void main(void)
     if (DVar4 != 0) {
         SetCurrentDirectoryA(local_128);
     }
+
+    // Set up winsock.
     iVar5 = WSAStartup(0x202,&local_2c8);
     if (iVar5 != 0) {
         MessageBoxA(0x0,"Error initializing Winsock","Error",0x10);
         goto LAB_1400017c4;
     }
+
+    // Create a new socket object.
     addr.sa_family = 1;
     bVar1 = true;
     addr.sa_data._0_4_ = 0;
@@ -123,6 +127,7 @@ void main(void)
         lpText = "Error creating Unix domain socket";
     }
     else {
+        // Bind to thea ddress.
         iVar5 = bind(s,&addr,0x6e);
         if (iVar5 == -1) {
             lpText = "bind failed";
@@ -130,6 +135,7 @@ LAB_140001743:
             MessageBoxA(0x0,lpText,"Error",0x10);
         }
         else {
+            // Start listening for clients.
             iVar5 = listen(s,0x7fffffff);
             if (iVar5 == -1) {
                 lpText = "listen failed";
@@ -140,8 +146,10 @@ LAB_140001743:
         if (uVar6 < 2) {
             HVar7 = CoInitializeSecurity(0x0,-1,0x0,0x0,0,3,0x0,0,0x0);
             if (HVar7 == 0) {
+                // ???
                 cVar3 = MAGIC_FUNCTION();
                 if (cVar3 != '\0') {
+                    // Accept next client.
                     SOCKET_CLIENT = accept(s,0x0,0x0);
                     hInstance = GetModuleHandleA(0x0);
                     hWnd = CreateDialogParamA(hInstance,"BOARD",0x0,MainDialogProc,0);
@@ -149,6 +157,7 @@ LAB_140001743:
                         lpText = "CreateDialog failed";
                     }
                     else {
+                        // Do normal Win32 GUI message loop...
                         iVar5 = GetMessageA(&local_368,0x0,0,0);
                         while (0 < iVar5) {
                             if (((local_360 - 0x100 < 3) && (pHVar2 = hWnd, local_358 - 0x25 < 4)) ||
@@ -215,7 +224,7 @@ Seems like we are extracting a resource to some temp file. Setting a breakpoint 
 $ file embedded.bin
 embedded.bin: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=e26dfd1a32bf2fc2f804ede74b1b9ef9c73268bf, stripped
 ```
-Interesting, an ELF binary. If we continue following the trail, and jump into the second `MAGIC_FUNCTION_2` call, we eventually end up in this function:
+An ELF binary! If we continue following the trail, and jump into the second `MAGIC_FUNCTION_2` call, we eventually end up in this function:
 
 ```c
 void CreateWSLInstance(undefined8 param_1,uint param_2)
@@ -264,12 +273,12 @@ void CreateWSLInstance(undefined8 param_1,uint param_2)
 }
 ```
 
-This explains the message from earlier. We are extracting a resource file, which happens to be an ELF binary, and then run it in an WSL environment. So even though the original binary is a normal Windows PE binary, it seems the real challenge is actually implemented in the ELF binary running in a Unix environment.
+Even though the pointer-magic that is happening here might be hard to understand, the strings do a great job at explaining what is happening here. We are extracting a resource file, which happens to be an ELF binary, and then run it in an WSL environment. So even though the original binary is a normal Windows PE binary, it seems the real challenge is actually implemented in the ELF binary running in a Unix environment.
 
 Reversing the ELF binary
 -----------------------
 
-After renaming lots of variables and functions, you'll notice that the ELF binary is not too complicated. It has one big main method that keeps looping until the main program terminates. In this loop, it receives the command from the main application, updates the board, determines the move of the AI player, and then sends the entire board state back to the main application. You will also notice that the AI that is implemented indeed is a perfect AI that either always wins or draws. 
+After opening the ELF binary in Ghidra, and renaming a few variables and functions, you'll notice that the embedded file is not too complicated. It has one big main procedure that keeps looping until the main program terminates. In this loop, it receives the command from the main application, updates the board, determines the move of the AI player, and then sends the entire board state back to the main application. You will also notice that the AI that is implemented indeed is a perfect AI that either always wins or draws. 
 
 The important thing to notice here is the following snippet:
 
@@ -357,7 +366,7 @@ But instead of stepping into this function, we open up a WSL terminal (such as U
 
 ![Figure 4](x64dbg2.png)
 
-If we now continue both the main application (F9 in x64dbg), as well as the WSL instance (using the `r` command in gdb), the application runs fine. We now debug both the main and the WSL instance, and have full control over the game.
+If we now continue both the main application (F9 in x64dbg), as well as the WSL instance (using the `r` command in gdb), the application runs fine. We now debug both the main and the WSL instance, and therefore have full control over the game.
 
 Now let's make the AI player win. We do one move:
 

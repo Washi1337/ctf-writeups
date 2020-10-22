@@ -38,7 +38,7 @@ Global $flavekolca = Number(" 0 "), $flerqqjbmh = Number(" 1 "), $flowfrckmw = N
 ...
 ```
 
-Furthermore, we also see a global variable `os` declared at line 133 that is used a lot throughout the entire program as an argument for the `arehdidxrgk` function. Looking at where this variable is assigned a value (line 557), we can see it is an array of encoded strings, and `arehdidxrgk` is the decoder for it. 
+Furthermore, we also see a global variable `os` declared at line 133 that is used a lot throughout the entire program as an argument for the `arehdidxrgk` function. Looking at where this variable is assigned a value (line 557), we can see it is an array of encoded strings, and `arehdidxrgk` is the decoder for it:
 
 ```autoit
 Func arehdidxrgk($flqlnxgxbp)
@@ -111,7 +111,7 @@ Func MessageLoop()
     ;- ...
 ```
 
-We can see a typical win32 message loop, where we wait for a button click event. If it is triggered, we grab the text of the input text box, set up the parameters for the call to qr_encoder.dll, do the call to `justConvertQRSymbolToBitmapPixels`, and then eventually display the generated image. But before we transfer control to the external dll, we call a mysterious function, which I called `MAGICFUNCTION`, that seems to take the qr code parameters, including the input text. Let's have a look:
+We can see a typical win32 message loop, where we wait for a button click event. If it is triggered, we grab the text of the input text box, set up the parameters for the call to `qr_encoder.dll`, do the call to `justConvertQRSymbolToBitmapPixels`, and then eventually display the generated image. But before we transfer control to the external dll, we call a mysterious function, which I called `MAGICFUNCTION`, that seems to take the qr code parameters, including the input text. Let's have a look:
 
 ```autoit
 
@@ -169,7 +169,7 @@ Func MAGICFUNCTION(ByRef $inputOutput)
     ;- ...
 ```
 
-That's a big function! If we go over it step by step, we can see the computer name is acquired, then some preprocessing is done, and after that, it is used as part of a decryption key for a whole bunch of cryptography (SHA256 and RSA) that we most likely cannot break. If, however, the decryption succeeds, the QR parameters are updated. So we know that this is the place to look.
+That's a big function! If we go over it step by step, we can see the computer name is acquired, then some preprocessing is done, and after that, it is used as part of a decryption key for a whole bunch of complicated cryptography (SHA256 and RSA) that we most likely cannot break. If, however, the decryption succeeds, the QR parameters are updated. So we know that this is the place to look.
 
 It seems though, that the decryption routine does not really rely on the input text that was given in the input box, but rather on the computer name. Let's have a look at the preprocessing of the computer name, see if we can find some clues there:
 
@@ -238,7 +238,7 @@ If we replace the computer name with the string `aut01tfan1999`, we can observe 
 
 ![Figure 4](gui2.png)
 
-Scanning the resulting QR code with a phone:
+Scanning the resulting QR code with a phone...
 
 ![Figure 5](scan.png)
 

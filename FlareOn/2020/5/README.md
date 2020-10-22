@@ -31,7 +31,7 @@ While that is going on, we can already do some preparation work. We know it is a
     - `tizen-manifest.xml` (application's manifest)
     - `TKApp.deps.json`
 
-From the `tizen-manifest.xml` we can find the application's entrypoint dll (`TKApp.dll`). Dragging this in a tool like CFF explorer reveals taht this dll is written in a .NET language. 
+From the `tizen-manifest.xml` we can find the application's entrypoint dll (`TKApp.dll`). Dragging this in a tool like CFF explorer reveals that this dll is written in a .NET language. 
 
 Decompilers targeting .NET applications (such as dnSpy or ILSpy) are quite good nowadays, especially when the application in question is not obfuscated heavily. This app is no exception. Hardly any obfuscation is applied:
 
@@ -100,7 +100,7 @@ Great, but this is not a flag, as flags end with `@flare-on.com`. Obviously it c
 A rant about Visual Studio and Android emulators...
 ---------------------------------------------------
 
-At this point the android emulator finally finished installing, and started wasting lots of time on trying to get the app running. And at this moment, I was once again reminded of why I never use Visual Studio anymore. Besides the fact that it is absolutely the sluggiest IDE I probably have ever used, for the love of god, I couldn't get the emulator to work for at least 30 minutes. When it finally ran, I tried running a blank watch app project myself, which I eventually got running on my virtual machine, but could not figure out how to upload a custom TPK file for another 15 minutes. Then as a last resort I tried to fully decompile the TKApp, recompile it using Visual Studio, and see if I can run it like that, but apparently the App uses very outdated dependencies of Tizen, which stopped me from compiling the project properly, even though ILSpy's generated source code had no syntax errors whatsoever. I decided at this point to call it quits and just try this challenge completely statically. 
+At this point the android emulator finally finished installing, and I started wasting lots of time on trying to get the app running. And at this moment, I was once again reminded of why I never use Visual Studio anymore. Besides the fact that it is absolutely the sluggiest IDE I probably have ever used, for the love of god, I couldn't get the emulator to work for at least 30 minutes. When it finally ran, I tried running a blank watch app project myself, which I eventually got running on my virtual machine, but could not figure out how to upload a custom TPK file for another 15 minutes. Then as a last resort I tried to fully decompile the TKApp, recompile it using Visual Studio, and see if I can run it like that, but apparently the App uses very outdated dependencies of Tizen, which stopped me from compiling the project properly, even though ILSpy's generated source code had no syntax errors whatsoever. I decided at this point to call it quits and just try this challenge completely statically. 
 
 You'd expect from Visual Studio, a toolsuite that is gigabytes in size on the disk, developed by Microsoft, a reputable company, that it would be easy to upload a custom tpk file to the watch emulator and run it. I am probably missing something obvious but boy, they could have made it a lot easier. Once again, a downvote from me for you Visual Studio.
 

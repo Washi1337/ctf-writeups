@@ -105,9 +105,10 @@ void shellmain(void)
     iStack456 = 5;
     uStack460 = 0x1544a8c0;
     uStack464 = 0x5c110002;
+    //...
 ```
 
-We do see some trace of `ws2_32`, but it makes calls to the return address? Let's go the entrypoint again, where `shellmain` is called. If the return address of this function call is used as an address of another procedure, then that must mean whatever comes after the shellmain call is actually a new function. Let's create a new function at address `0x00000156`, and see what it does:
+We do see some trace of `ws2_32`, but it makes calls to the return address? Let's go the entrypoint again, where `shellmain` is called. If the return address of this function call is used as an address of another procedure, then that must mean whatever comes directly after the shellmain call is actually a new function. Let's create a new function at address `0x00000156`, and see what it does:
 
 ```c
 void FUN_00000156(int param_1)

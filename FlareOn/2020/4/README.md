@@ -132,7 +132,9 @@ with open("stomp.mp3", "wb") as f:
     f.write(result)
 ```
 
-However, it outputs a sound file with the title "This is not what you should be looking at...", and the audio itself is nothing more than some drums playing a rhythm.
+However, it outputs a sound file ([stomp.mp3](stomp.mp3)) with the title "This is not what you should be looking at...", and the audio itself is nothing more than some drums playing a rhythm.
+
+![Figure 4](stomp.png)
 
 What did we miss?
 

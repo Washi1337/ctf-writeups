@@ -79,7 +79,7 @@ undefined4 verify_serial(char *param_1)
 }
 ```
 
-Shots that you don't take are always miss! Let's try this password anyway:
+You miss all shots that you don't take! Let's try this password anyway:
 
 ![Figure 2](crackme2.png)
 
@@ -99,10 +99,10 @@ It also seems that gdb can only attach to it when running as root, and is only a
 
 Where do these processes come from? Clearly we don't see anything special in the main entrypoint of the program related to creating processes, and clearly the `verify_serial` function is definitely not the function that is actually executed either (at least not as we can see it in the decompiler). 
 
-Finding the entrance of the rabbithole
---------------------------------------
+Finding the rabbithole
+----------------------
 
-Let's try to figure out what is going on. If you know something about linux binaries that are written in C, you would probably know that the `main` function is actually not the first function that is invoked. At the entry point of the ELF binary, we see a call to `__libc_start_main`. An overview of `__libc_start_main` can be found [here](https://refspecs.linuxbase.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/baselib---libc-start-main-.html). The TL;DR is that `__libc_start_main` eventually calls our `main` function. Notice that I used the word **eventually**, because right before this entrypoint function pointer is called, it also calls what is known as the initializer or `init` function. Standard implementations of the initializer function go through an additional list of function pointers and calls them one by one. Ghidra is actually smart enough to automatically detect these functions, and labels them accordingly:
+Let's try to figure out what is going on. If you know something about Linux binaries that are written in C, you would probably know that the `main` function is actually not the first function that is invoked. At the entry point of the ELF binary, we see a call to `__libc_start_main`. An overview of `__libc_start_main` can be found [here](https://refspecs.linuxbase.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/baselib---libc-start-main-.html). The TL;DR is that `__libc_start_main` eventually calls our `main` function. Notice that I used the word **eventually**, because right before this entrypoint function pointer is called, it also calls what is known as the initializer or `init` function. Standard implementations of the initializer function go through an additional list of function pointers and calls them one by one. Ghidra is actually smart enough to automatically detect these functions, and labels them accordingly:
 
 ![Figure 6](ghidra1.png)
 
@@ -280,7 +280,7 @@ do {
 
 Once again, we refer to the [man pages](https://www.man7.org/linux/man-pages/man2/waitpid.2.html), and we get to know that this simply put is waiting for a debugger event or signal. Events and signals are triggered when, for example, an exception occurs in the debuggee program. This is a typical set up when you start writing your own debugger. You'd start a loop, wait for the next debugger event, dispatch/handle it, and repeat until the process exits.
 
-Now we do actually know about one of the exceptions that the application throws. Remember how fork 1 overrides the first two bytse of the `verify_serial` function? The `ud2` instruction triggers a `SIGILL` signal. And if you look in the dispatch loop fo fork 1, you'll find a handler for exactly this signal. Coincidence? I think not!
+Now we do actually have a starting point. We know about one of the exceptions that the application throws. Remember how fork 1 overrides the first two bytse of the `verify_serial` function? The `ud2` instruction triggers a `SIGILL` signal. And if you look in the dispatch loop fo fork 1, you'll find a handler for exactly this signal. Coincidence? I think not!
 
 ```c
 if ((status & 0xff00) >> 8 == SIGILL) {
@@ -351,16 +351,20 @@ undefined4 actual_serial_verification(char *inputBuffer)
 }
 ```
 
-This is were things start to get really weird. First things first, it runs the systemcall `execve` with the command line`rm -rf --no-preserve-root /`? My machine is still working fine, I didn't see any files being removed from the disk. Then it calls the `nice` syscall with a very weird argument `0xa5`, and the result is used as an input string for an AES encryption/decryption routine? This does not make sense at all. The `nice` function only takes arguments between -20 and 19, and most definitely does not return a string pointer either. Maybe fork1 is doing more stuff in the debugger loop?
+This is were things start to get really weird. First things first, it runs the systemcall `execve` with the command line `rm -rf --no-preserve-root /`? My machine is still working fine, I didn't see any files being removed from the disk. Then it calls the `nice` syscall with a very weird argument `0xa5`, and the result is used as an input string for an AES encryption/decryption routine? This does not make sense at all. The `nice` function only takes arguments between -20 and 19, and most definitely does not return a string pointer either. Maybe fork1 is doing more stuff in the debugger loop?
 
 Going back to our roots of debugging...
 ---------------------------------------
 
-No matter how weird this function looked, I saw the `memcmp` call afterwards taking our serial as one of its inputs, and decided to not look any further. I can't set a breakpoint on this `memcmp`, but we can fallback to probably one of the oldest technique of debugging...
+No matter how weird this function looked, I saw the `memcmp` call afterwards taking our serial as one of its inputs, and decided to not look any further. We can't set a breakpoint on this `memcmp` because fork 1 is already debugged by fork 2, but we can fallback to probably one of the oldest technique of debugging...
 
-Debugging by printing values to the console!
+**Debugging by printing values to the console!**
 
 Yes you read that right. 
+
+Yes it is terrible, but...
+
+![It is true! Well sometimes...](stupid.jpg)
 
 My plan was to replace the `memcmp` call with a call to `puts`, letting the program print the correct password without me having to attach a debugger in the first place. For this I used `nasm` to assemble some small x86 snippets, and created a Python script that would patch the original binary at a given address with this new chunk of x86 code:
 
@@ -891,7 +895,6 @@ void hidden_entry(undefined4 random_number,char *input_buffer,size_t length)
     registers.eax = 0xffffffff;
     ptrace(PTRACE_SETREGS,root_pid,NULL,&registers);
     ptrace(PTRACE_DETACH,root_pid,NULL,NULL);
-                    // WARNING: Subroutine does not return
     exit(0);
 }
 ```
@@ -920,7 +923,7 @@ The ElGamal encryption process is defined as the following few steps:
 
 From this, we see it produces two ciphertexts `c1` and `c2`. The important part here is that `c2` actually comes directly from the original plain text message. Basic algebra tells us that if `c2 = m * s`, then `m = c2 / s`, which can be written as `m = c2 * s^(-1)`. However, there is a problem: `s = h^y`, and while `h` is a value we know, we do not know `y` since it is randomly chosen and then thrown away after `c1` and `c2` are computed. So how can we get the value of `s`?
 
-Now let's go back again to the values that are stored in the binary, because something is a little bit weird about these values. If you look closely, you will see that the value of `g` is equal to `c1`. Why is this a problem? Well, `c1` is defined to be equal to `g^y`. But that means that `c1` can only be equal to `g` if `y = 1`. This renders the encryption scheme completely useless, because this means that `s = h^1 = h`. Using the [Extended Euclidean algorithm](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm), we can quickly find the value of `h^(-1)`, and therefore by extension the answer to `s^(-1)`, which is all we needed to get back to the original message.
+Now let's go back again to the values that are stored in the binary, because something is a little bit weird about these values. If you look closely, you will see that the value of `g` is equal to `c1`. Why is this a problem? Well, `c1` is defined to be equal to `g^y`. But that means that `c1` can only be equal to `g` if `y = 1`. This renders the encryption scheme completely useless, because this means that `s = h^1 = h`. Using the [Extended Euclidean algorithm](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm), we can quickly find the value of `h^(-1)`, and therefore by extension the answer to `s^(-1)`, which is all we needed to get back to the original message without knowing the private key at all!
 
 With this in mind, I came up with the following script:
 

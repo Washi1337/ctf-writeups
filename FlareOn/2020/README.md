@@ -18,7 +18,12 @@ Table of Contents
 - [10 - break](10)
 - [11 - rabbithole](11)
 
-Screenshot
-----------
+Binaries
+--------
+Download the binaries [here](http://flare-on.com/files/Flare-On7_Challenges.zip).
+
+
+Bragging rights
+---------------
 
 ![Achievements screen](solved-screenshot.png)

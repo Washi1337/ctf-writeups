@@ -52,7 +52,7 @@ Let's get to know the user of the computer a bit. As said before, the `NTUSER.da
 
 ![View options](shellbags.png)
 
-These kinds of settings are stored in what is known as Shellbags which are put in the `SOFTWARE\Microsoft\Windows\Shell\Bags` key. Now why would we be interested in the view options of someone's folders? Well we are not really interested in the view options themselves, but more so in the other information that is stored next to it. It so happens that Shellbags can give you a very good indication of what kind of files the user had stored on their computer, especially in personal directories that they visited a lot. This information includes file names. Even though we might not get the actual contents of a files, just knowing of the existence of a particular file is very valuable sometimes. And this case is no exception:
+These kinds of settings are stored in what is known as Shellbags which are put in the `SOFTWARE\Microsoft\Windows\Shell\Bags` key. Now why would we be interested in the view options of someone's folders? We are not really interested in the view options themselves, but more so in the other information that is stored next to it. It so happens that Shellbags can give you a very good indication of what kind of files the user had stored on their computer. There exists a shellbag for every directory that the user has changed the viewing options for, and each shellbag includes the names of the files stored in this directory. Even though we might not get the actual contents of a files, just knowing of the existence of a particular file is very valuable sometimes. And this case is no exception:
 
 ![Shellbags](regexp2.png)
 
@@ -105,7 +105,7 @@ if($yhibbqw=$ywqphsrw::VirtualAllocEx($ywqphsrw::GetCurrentProcess(),0,$rpl.Leng
 }
 ```
 
-This is a common code injection trick that injects [code](artifacts/timerpro.d.decoded.bin) in the current process (Powershell), and runs it using `QueueUserAPC`. Very suspicious indeed. To put the nails in the coffin, I decided to check in the registry for any references to this Timerpro to be absolutely sure this was the malware that was ran on the computer. We find this key in one of the startup scripts of the user:
+This is a common code injection trick that injects [code](artifacts/timerpro.d.decoded.bin) in the current process (Powershell), and runs it using `QueueUserAPC`. This is starting to look very suspicious. To put the nails in the coffin, I decided to check in the registry for any references to this Timerpro to be absolutely sure this was the malware that was ran on the computer. We find this key in one of the startup scripts of the user:
 
 ![Forfiles.exe](regexp5.png)
 
@@ -124,7 +124,7 @@ Looking into this binary using a hex editor shows that it's not a typical PE fil
 
 ![The loader in a hex editor](hxd1.png)
 
-We know from the `QueueUserAPC` call in the Powershell script that the program starts at offset 0. Opening this up in Ghidra reveals that the first instruction is a jump to a bootstrapper code starting at offset `0x000099fc`.  The code starts out by using our good friend the PEB and TEB to resolve some imports, and eventually calls the real entrypoint at offset `0x00009d1c`.
+We know from the `QueueUserAPC` call in the Powershell script that the program starts at offset 0. Opening this up in Ghidra reveals that the first instruction is a jump to a bootstrapper code starting at offset `0x000099fc`.  The code starts out by using our good friends the PEB and TEB to resolve some imports, and eventually calls the real entrypoint at offset `0x00009d1c`.
 
 ```c
 undefined8 FUN_000099fc(ulonglong param_1)
@@ -270,14 +270,14 @@ ulonglong Main(longlong param_1,uint *param_2)
             HeapFree(APP_HEAP,0,lpMem_00);
         }
 
-        /* ... do some complicating loading and run entrypoint ... */
+        /* ... do some complicated loading and run entrypoint ... */
     }
 
     /* ... */
 }
 ```
 
-In this function, we see that it initializes a root registry handle (possibly Timerpro?), as well as two sub key handles. But the strings indicating which sub keys are accessed are obfuscated. They are replaced by a function that I called `GetString` (at address `0x18000d21c`). In fact, this function is called almost everywhere in the binary. Let's find out how to decrypt these strings so that we can annotate the code.
+In this function, we see that it initializes a root registry handle (possibly Timerpro?), as well as two sub key handles. But the strings indicating which sub keys are accessed are obfuscated. They are replaced by a function that I called `GetString` (at address `0x18000d21c`). In fact, this function is called almost everywhere in the binary (and is going to prove to be very important later on as well). Let's find out how to decrypt these strings so that we can annotate the code.
 
 Decrypting strings
 ------------------
@@ -400,8 +400,8 @@ Now let's find the second piece of the puzzle; the word list. Fortunately for us
 
 A full reimplementation of the string decrypter can be found in [this python script](scripts/string_decrypter.py). 
 
-Decrypting the modules from the registry
-----------------------------------------
+Decrypting the modules in the registry
+--------------------------------------
 
 Let's continue our adventure. Going back to our main function, we see that it creates or reads values from either the `Languagetheme` (f0f) or `Columncurrent` (1010) subkey:
 
@@ -496,7 +496,9 @@ I must say after a lot of late hours of analysing and finally getting some progr
 Let the real detective work begin!
 ----------------------------------
 
-Even though this sounds perhaps discouraging, this is also the moment where we start to finally see some light at the end of the tunnel (or rabbithole for that matter). A good rule of thumb with the flare-on challenges that I found is: When you start seeing funny strings or hints to FLARE, it usually means you are on the right track. For example, a quick peek into the modules stored in both subkeys `Columncurrent` and `Languagetheme` reveals that one sub key contains 32-bit modules, and the other the exact same modules, but compiled as 64-bit dlls instead. This already cuts in half the amount of files we need to analyse. Furthermore, there are a lot of copies of the `taunt.dll` file in there as well. Together with the information from the Dr. Web article that leaves us with only the following modules still to analyse:
+Even though this sounds perhaps discouraging, this is also the moment where we start to finally see some light at the end of the tunnel (or rabbithole for that matter). A good rule of thumb with the flare-on challenges that I found is: When you start seeing funny strings or hints to FLARE, it usually means you are on the right track. 
+
+Furthermore, a quick peek into the modules stored in both subkeys `Columncurrent` and `Languagetheme` reveals that one sub key contains 32-bit modules, and the other the exact same modules, but compiled as 64-bit dlls instead. This already cuts in half the amount of files we need to analyse. Furthermore, there are a lot of copies of the `taunt.dll` file in there as well. Together with the information from the Dr. Web article that leaves us with only the following modules still to analyse:
 
 | Value name                  | CRC        | Original name         |
 |-----------------------------|------------|-----------------------|
@@ -669,7 +671,7 @@ void FUN_180003880(undefined8 param_1,undefined4 *param_2)
 }
 ```
 
-Great, we now know that MAIN is updated every time a HTTP request is made to the C2 server! What about `DiMap` though? There is no trace of `DiMap` anywhere in any of the decrypted BSS sections, nor is it hardcoded as a string in the executable itself either. It does look like one of those random strings generated from that long word list, however. Let's find out which string index belongs to `DiMap` with [yet another Python script](script/find_dimap.py) using our string decrypter:
+Great, we now know that MAIN is updated every time a HTTP request is made to the C2 server! What about `DiMap` though? There is no trace of `DiMap` anywhere in any of the decrypted BSS sections, nor is it hardcoded as a string in the executable itself either. However, it does look like one of those random strings generated from that long word list. Let's find out which string index belongs to `DiMap` with [yet another Python script](script/find_dimap.py) by plain and simple bruteforce:
 
 ```python
 from string_decrypter import *
@@ -706,7 +708,7 @@ undefined8 WriteDiMap(undefined8 param_1,undefined8 param_2,undefined8 param_3,l
 }
 ```
 
-Here we go! A quick side note: The reason it didn't find it using the memory search is because the assembly code didn't contain the value `7F7F` literally, but rather uses some weird assembly construct to build up the value `7F7F`:
+Here we go! A quick side note: The reason it didn't find it using the memory search is because the assembly code didn't contain the value `7F7F` literally, but rather uses some weird assembly construct to build up the value `7F7F`, sneaky bastards!
 
 ```
 ...
@@ -720,7 +722,7 @@ If we look into the call tree of this function, we find that it is called by our
 
 ![Call tree](ghidra2.png)
 
-If we look into `FUN_180001000`, we see some very interesting things happening right before this write to the `DiMap` value happens:
+If we look into `FUN_180001000`, we see some very interesting things happening right before this write call to the `DiMap` registry value:
 
 ```c
     /* ... */
@@ -742,7 +744,7 @@ If we look into `FUN_180001000`, we see some very interesting things happening r
             /* ... */
 ```
 
-Great, we know now it is encrypted using the Serpent encryption scheme. We just need to find the encryption key. According to the Dr. Web article again, there is an encryption key stored in the base configuration of the malware. This base configuration is stored under the string index `D722AFCB`, which maps to the value `MonitornewWarningmap` in the registry. 
+Great, we know now it is also encrypted using the Serpent encryption scheme. We just need to find the encryption key. According to the Dr. Web article again, there is an encryption key stored in the base configuration of the malware. This base configuration is stored under the string index `D722AFCB`, which maps to the value `MonitornewWarningmap` in the registry. 
 
 ```
 $ python string_decrypter.py d722afcb 5
@@ -783,4 +785,4 @@ Closing thoughts
 
 I probably spent way too much time on this challenge. After the fact, I learnt there were so many write-ups about this malware, and how it uses the XOR + Serpent combination for encryption/decryption that I could have probably solved it with a lot of existing tools instead. I heard some people just solved it this way by just guessing that this would still be the case. I wish the FLARE team would have changed one or two things regarding the encryption algorithms that were used, since they were basically just a copy paste of the original. 
 
-Nevertheless, I really enjoyed the process and I learnt a lot. It is a proper final challenge for Flare-On, as it showcases a malware sample of what you could find in the real world. 
+Nevertheless, I really enjoyed the process and I learnt a lot, and is probably in my top 3 challenges for this year. It is a proper final challenge for Flare-On, as it showcases a malware sample of what you could find in the real world. 

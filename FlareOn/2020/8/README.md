@@ -186,7 +186,7 @@ LAB_140001925:
 }
 ```
 
-We see already a weird string: `Error creating Unix domain socket`. We are on Windows, not on a unix system? Furthermore, we see some weird COM initialization calls, as well as amysterious call to a `MAGIC_FUNCTION` right before the `accept` call where `SOCKET_CLIENT` is assigned a value. Let's dive in.
+We see already a weird string: `Error creating Unix domain socket`. We are on Windows, not on a unix system? Furthermore, we see some weird COM initialization calls, as well as a mysterious call to a `MAGIC_FUNCTION` right before the `accept` call where `SOCKET_CLIENT` is assigned a value. Let's dive in.
 
 ```c
 void MAGIC_FUNCTION(void)

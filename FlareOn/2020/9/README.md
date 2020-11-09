@@ -213,7 +213,7 @@ ulonglong entry(longlong param_1)
 }
 ```
 
-Since we know that this dll is a driver, we know that the first parameter of the entrypoint is of type `DRIVER_OBJECT`. Here is something that Ghidra could improve on. By default, Ghidra does not have type definitions / headers for driver objects. Therefore, it is a bit hard to see immediately what each pointer access is. However, spending a ltitle bit of time [looking at the definition of DRIVER_OBJECT](https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object), we can quickly see that the last 4 pointer writes register some callback functions. In our story, the third one is the important one (`0x10590`), since it is called upon every `DeviceIoControl` call to this driver. Let's have a look:
+Since we know that this dll is a driver, we know that the first parameter of the entrypoint is of type `DRIVER_OBJECT`. Here is something that Ghidra could improve on. By default, Ghidra does not have type definitions / headers for driver objects. Therefore, it is a bit hard to see immediately what each pointer access is. However, spending a little bit of time [looking at the definition of DRIVER_OBJECT](https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object), we can quickly see that the last 4 pointer writes register some callback functions. In our story, the third one is the important one (`0x10590`), since it is called upon every `DeviceIoControl` call to this driver. Let's have a look:
 
 ```c
 ulonglong FUN_00010590(undefined8 param_1,longlong param_2)

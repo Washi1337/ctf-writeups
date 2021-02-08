@@ -1,8 +1,8 @@
 # ClumsyVM
 
-**Author:** LoLLo90
+**Challenge Author:** LoLLo90
 
-**Thread link:** [https://forum.tuts4you.com/topic/42829-clumsyvm/](https://forum.tuts4you.com/topic/42829-clumsyvm/)
+**Challenge Link:** [https://forum.tuts4you.com/topic/42829-clumsyvm/](https://forum.tuts4you.com/topic/42829-clumsyvm/)
 
 **Time spent:** About 1-2 days.
 
@@ -81,7 +81,7 @@ public static void Main(string[] string_0)
 }
 ```
 
-The first method prepares the initial state of the virtual machine by importing a long bit string of 36bit integers into an array. From now on, we will be calling this chunk of memory `VMMemory`. Interestingly to note is that it seems that the `VMMemory` type is actually initialized with very similar of not the same chunk of memory, which is then overrided by a method which I called `ImportMemory`:
+The first method prepares the initial state of the virtual machine by importing a long bit string of 36bit integers into an array. From now on, we will be calling this chunk of memory `VMMemory`. Interestingly to note is that it seems that the `VMMemory` type is actually initialized with very similar if not the same chunk of memory, which is then overrided by a method which I called `ImportMemory`:
 
 ```csharp
 public class VMMemory

@@ -398,7 +398,7 @@ This tells us that all instructions either have the next offset hardcoded in the
 
 ## Disassembling and tracing the executed micro code
 
-Now we have a solid understanding of the micro code, we can build some models for the VM. You can find them in the [ClumsyVM.Architecture](ClumsyVM/ClumsyVM.Architecture) project.
+Now we have a solid understanding of the micro code, we can build some models for the VM. You can find them in the [ClumsyVM.Architecture](src/ClumsyVM.Architecture) project.
 
 Let's figure out what code the CPU is executing. For this, I went into the fetch stage, and added some code to dump the current state of the entire VM on every instruction.
 

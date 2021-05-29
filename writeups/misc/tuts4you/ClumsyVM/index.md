@@ -1,3 +1,8 @@
+---
+title: ClumsyVM
+layout: default
+---
+
 # ClumsyVM
 
 **Challenge Author:** LoLLo90

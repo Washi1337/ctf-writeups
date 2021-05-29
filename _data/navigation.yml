@@ -1,0 +1,9 @@
+- name: Home
+  link: /
+- name: Flare-On
+  link: /writeups/flare-on
+- name: Miscellaneous
+  link: /writeups/misc      
+- name: About
+  link: /about.html
+

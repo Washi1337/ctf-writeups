@@ -1,5 +1,9 @@
-5 - TKApp
-==========
+---
+title: 5 - TKApp
+layout: default
+---
+
+# 5 - TKApp
 
 **Time spent:** 2 hours (one hour wasted on setting up and troubleshooting an emulator :( )
 
@@ -11,8 +15,8 @@ The fifth challenge of this years is an interesting concept. You are given an ap
 
 However, the conclusion of this write-up might be somewhat anticlimactic. I probably did not solve this the intended way. In fact, I ended up solving it without the need to run the program at all.
 
-Orientation
------------
+
+## Orientation
 
 The first thing I did, was start downloading and installing an emulator to run the app on (I used Visual Studio's Android Emulator that comes with the Xamarin SDK).
 
@@ -39,8 +43,8 @@ Decompilers targeting .NET applications (such as dnSpy or ILSpy) are quite good 
 
 Let's start the detective work!
 
-UnlockPage
-----------
+
+## UnlockPage
 
 Since I was still waiting for the emulator to be downloaded and installed (sheesh), I decided to just click around a bit. If an application is not obfsucated, then we can already get a lot of information just by looking at the source code.
 
@@ -97,15 +101,15 @@ mullethat
 
 Great, but this is not a flag, as flags end with `@flare-on.com`. Obviously it couldn't be *that* easy!
 
-A rant about Visual Studio and Android emulators...
----------------------------------------------------
+
+## A rant about Visual Studio and Android emulators...
 
 At this point the android emulator finally finished installing, and I started wasting lots of time on trying to get the app running. And at this moment, I was once again reminded of why I never use Visual Studio anymore. Besides the fact that it is absolutely the sluggiest IDE I probably have ever used, for the love of god, I couldn't get the emulator to work for at least 30 minutes. When it finally ran, I tried running a blank watch app project myself, which I eventually got running on my virtual machine, but could not figure out how to upload a custom TPK file for another 15 minutes. Then as a last resort I tried to fully decompile the TKApp, recompile it using Visual Studio, and see if I can run it like that, but apparently the App uses very outdated dependencies of Tizen, which stopped me from compiling the project properly, even though ILSpy's generated source code had no syntax errors whatsoever. I decided at this point to call it quits and just try this challenge completely statically. 
 
 You'd expect from Visual Studio, a toolsuite that is gigabytes in size on the disk, developed by Microsoft, a reputable company, that it would be easy to upload a custom tpk file to the watch emulator and run it. I am probably missing something obvious but boy, they could have made it a lot easier. Once again, a downvote from me for you Visual Studio.
 
-MainPage
---------
+
+## MainPage
 
 Let's do a step back: In the login click handler, we can see that after a correct password validation, we can see that the program opens `MainPage`. This page has a couple of very interesting, odd-looking methods that suspiciously look like some verification or decryption routine. One is called `PedDataUpdate`, and the other is `GetImage`. Here is the code:
 
@@ -175,8 +179,8 @@ private bool GetImage(object sender, EventArgs e)
 
 We can see that `GetImage` seems to be building up a string based on a bunch of variables in the application, and then feeding it into `Util.GetString`, together with a hardcoded resource byte array called `Runtime.dll`. This method does nothing more than implement an AES decryption routine. One of these strings is our previously found password. Let's find out the values of the other bad boys.
 
-App.Note
---------
+
+## App.Note
 
 Looking into `App.Note` in the analyzer of dnSpy, we can see that its value is set at the very end of the `SetupList()` method in the `TodoPage` class. 
 
@@ -217,8 +221,7 @@ From this we can deduce that the note will contain the following string:
 keep steaks for dinner
 ```
 
-App.Step
---------
+## App.Step
 
 We already have seen the place where `App.Step` is assigned, namely in `PedDataUpdate`. The data comes from the application's metadata with the key `its`. Metadata like this is stored in the application's manifest:
 
@@ -249,8 +252,7 @@ Here we can see the string is set to
 magic
 ```
 
-App.Desc
---------
+## App.Desc
 
 Looking at the places where this property is set in the analyzer, we can find one reference to it in `IndexPage_CurrentPageChanged` of the `GalleryPage` class:
 
@@ -278,8 +280,7 @@ We can see it obtains the description of an image. We can simply copy the iamge 
 water
 ```
 
-Conclusion
-----------
+## Conclusion
 
 We now have everything to decrypt `Runtime.dll`. Copy & paste the decryption routine, together with all the values we found, we find that the resulting byte array is an image, revealing the flag:
 

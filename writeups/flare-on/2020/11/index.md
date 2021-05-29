@@ -1,5 +1,9 @@
-11 - rabbithole
-===============
+---
+title: 11 - rabbithole
+layout: default
+---
+
+# 11 - rabbithole
 
 **Time spent:** Around a week and a half
 
@@ -28,8 +32,8 @@ The file we are given is called `NTUSER.dat`. Not an `*.exe`, `*.dll`, `*.sys` o
 
 Given the title of the challenge, and me having very little experience in digital forensics, this promised to be a fun (and painful) ride.
 
-What is NTUSER.dat and how to read it?
---------------------------------------
+
+## What is NTUSER.dat and how to read it?
 
 A quick search on the web shows that the `NTUSER.dat` file is a file that contains one of the Windows Registry hives. 
 
@@ -45,8 +49,8 @@ There exists various tools to open registry hives. The one that I used is called
 
 In short, if you can get a copy of someone's `NTUSER.dat` file, you can infer a lot about how someone uses his computer, provided that you know what to look for...
 
-Finding our target
-------------------
+
+## Finding our target
 
 Let's get to know the user of the computer a bit. As said before, the `NTUSER.dat` contains all per-user settings that Windows uses. One of these settings is called Shellbags. Have you ever changed the view options of a folder in Windows Explorer from Large Icons to Small Icons or Details? And if so, did you notice that Windows restores this preference upon revisiting the very same folder? 
 
@@ -58,8 +62,8 @@ These kinds of settings are stored in what is known as Shellbags which are put i
 
 We now know that we should look for a file called `flag.txt` stored on the Desktop.
 
-Finding the malware
--------------------
+
+## Finding the malware
 
 You might be wondering, how does a database of settings give us the contents of a flag.txt or a malicious binary to analyse in the first place? Registry Explorer might be all cool and dandy, but settings are just settings, it is not as if it is a place where you would expect the actual contents of files executable code. Maybe we could find a file path somewhere to the malware, but not the malware itself right?
 
@@ -117,8 +121,8 @@ iex (gp 'HKCU:\SOFTWARE\Timerpro').D
 
 ... which indeed executes whatever is stored in the suspicious registry value. We now know for sure that this is the malware that was executed!
 
-Restoring the first loader
---------------------------
+
+## Restoring the first loader
 
 Looking into this binary using a hex editor shows that it's not a typical PE file. It seems the MZ header was removed, but some of the headers seem to be somewhat present:
 
@@ -158,8 +162,7 @@ undefined8 FUN_000099fc(ulonglong param_1)
 After obtaining the entrypoint address and fixing up the headers to make it a somewhat normal looking PE (a copy of the new file can be found [here](artifacts/timerpro.d.fixedheaders.bin)) we can finally start analysing the malware in Ghidra.
 
 
-Analysing the payload
----------------------
+## Analysing the payload
 
 Following the entrypoint of the dll, we find our first function to analyse:
 
@@ -279,8 +282,8 @@ ulonglong Main(longlong param_1,uint *param_2)
 
 In this function, we see that it initializes a root registry handle (possibly Timerpro?), as well as two sub key handles. But the strings indicating which sub keys are accessed are obfuscated. They are replaced by a function that I called `GetString` (at address `0x18000d21c`). In fact, this function is called almost everywhere in the binary (and is going to prove to be very important later on as well). Let's find out how to decrypt these strings so that we can annotate the code.
 
-Decrypting strings
-------------------
+
+## Decrypting strings
 
 Analysing the function in more depth reveals that this function generates a string based on some kind of seed and a word list. It picks words at random using a xorshift pseudo random number generator (which can be identified by the constant `2545F4914F6CDD1D` in the code) that is seeded by the first argument of the `GetString` function, and another unknown seed:
 
@@ -400,8 +403,8 @@ Now let's find the second piece of the puzzle; the word list. Fortunately for us
 
 A full reimplementation of the string decrypter can be found in [this python script](scripts/string_decrypter.py). 
 
-Decrypting the modules in the registry
---------------------------------------
+
+## Decrypting the modules in the registry
 
 Let's continue our adventure. Going back to our main function, we see that it creates or reads values from either the `Languagetheme` (f0f) or `Columncurrent` (1010) subkey:
 
@@ -441,8 +444,8 @@ If we have a look at the first module it decrypts with string index `8576B0D0` (
 
 What is the PX file format? Web searches about the PX file format doesn't immediately show us something useful. We could of course try to reverse engineer the entire parsing process of this file format, but this sounds like a very hard challenge. Can we somehow avoid this?
 
-Identifying the malware
------------------------
+
+## Identifying the malware
 
 I got reminded of the note that we were given. The malware seems to be based on a well-known banking trojan. Let's do some research, and see if we can find some base code or even existing tools that might help us out in our analysis.
 
@@ -454,8 +457,9 @@ I first tried a snippet of the long word list used to generate strings. Unfortun
 
 Bingo! Apparently the malware is part of the Gozi/ISFB/Ursnif family! Doing more research shows that this malware indeed. Especially the [article by Dr. Web](https://vms.drweb.com/virus/?i=16047509&lng=en) is very useful. It tells us that `8576B0D0` (and others) is not a random number, but rather the CRC32 of the original name of the binary. 
 
-Converting PX to PE files
---------------------------
+
+## Converting PX to PE files
+
 Further research also brings us to [ISFB_parser](https://github.com/hasherezade/funky_malware_formats/tree/master/isfb_parser), which is a great program written by [Hasherezade](https://hasherezade.github.io/) that is able to convert this weird PX file format to normal PE file formats. Let's do just that:
 
 ```
@@ -468,13 +472,13 @@ For some binaries, this works completely flawlessly. For others, such as `Websof
 
 Changing the `Machine` field to `AMD64`, and `Magic` to `PE64` in CFF Explorer fixes up the headers of those files completely. 
 
-Original source code 
---------------------
+
+## Original source code
 
 We also can find the original leaked source of the Gozi banking trojan [on GitHub](https://github.com/t3rabyt3-zz/Gozi). While we probably won't be able to exactly match the original code with the compiled binaries that we are working with right now, we can still use it as a reference point to help us identifying important functions (most notably, encryption routines will be very useful). It is a very interesting repository to go through, so definitely worth taking a look if you haven't already!
 
-Getting trolled
----------------
+
+## Getting trolled
 
 I starting looking into some of the files, and if you do that, you'll quickly find that a lot of the dlls are copies of a dll called `taunt.dll`. The only thing this dll does, is choosing a random string from a list, and showing it in a message box:
 
@@ -493,8 +497,8 @@ I see what you are doing, but that's not gonna work.
 
 I must say after a lot of late hours of analysing and finally getting some progress with converting PX files to PE files, I was laughing my ass off when I saw these messages.
 
-Let the real detective work begin!
-----------------------------------
+
+## Let the real detective work begin!
 
 Even though this sounds perhaps discouraging, this is also the moment where we start to finally see some light at the end of the tunnel (or rabbithole for that matter). A good rule of thumb with the flare-on challenges that I found is: When you start seeing funny strings or hints to FLARE, it usually means you are on the right track. 
 
@@ -519,8 +523,8 @@ We also know from the Dr. Web article that `RowmapGuiprotocol` is going to be th
 
 Finally, we have a whole bunch of registry values in the `Timerpro` registry key that we have no idea yet what they are about. If one of the registry values contains the contents of the `flag.txt` (it pretty much has to be in there somewhere, encrypted or not), then the blob must be relatively large again, and not just a single number. Two registry values match this requirement: The `MAIN` value in the `Timerpro\WordTimer`, and `DiMap` in `Timerpro` itself. It would be a good idea to look for references to these values as well.
 
-Decrypting the .BSS sections
-----------------------------
+
+## Decrypting the .BSS sections
 
 Before we can dive fully into the modules, we need to do some preparation work. If you open the modules in Ghidra, you will quickly notice that they all start up in a very similar fashion, very much akin to the original shellcode payload that was stored in the Powershell script. For example, the WebsoftwareProcesstemplate.dll starts off by exeucting the following code:
 
@@ -581,8 +585,8 @@ Writing [a quick script in Python](scripts/decrypt_bss.py) that reimplements thi
 
 We can now start annotating all the other encrypted strings in all binaries.
 
-Identifying export functions
-----------------------------
+
+## Identifying export functions
 
 To get a good understanding of the main module, I started by first identifying the export functions that the main module uses from other libraries. Instead of going though all functions all by one, I summarized them here in a list:
 
@@ -622,8 +626,8 @@ To get a good understanding of the main module, I started by first identifying t
 | 11-12    | Send HTTP request to C2 server.                           |
 | 78-79    | Forwards to 8576B0D0.dll::#78-#79                         |
 
-Tying it all together
----------------------
+
+## Tying it all together
 
 Now that we have the building blocks, we can start fully analysing the main module `RowmapGuiprotocol` (`224C6C42`, explorer.dll). 
 
@@ -780,8 +784,7 @@ open("../artifacts/DiMap_decrypted.bin", "wb").write(data)
 r4d1x_m4l0rum_357_cup1d1745@flare-on.com
 ```
 
-Closing thoughts
-----------------
+## Closing thoughts
 
 I probably spent way too much time on this challenge. After the fact, I learnt there were so many write-ups about this malware, and how it uses the XOR + Serpent combination for encryption/decryption that I could have probably solved it with a lot of existing tools instead. I heard some people just solved it this way by just guessing that this would still be the case. I wish the FLARE team would have changed one or two things regarding the encryption algorithms that were used, since they were basically just a copy paste of the original. 
 

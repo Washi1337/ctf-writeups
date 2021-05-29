@@ -1,5 +1,9 @@
-9 - crackstaller
-==================
+---
+title: 9 - crackstaller
+layout: default
+---
+
+# 9 - crackstaller
 
 **Time spent:** about a day
 
@@ -11,8 +15,8 @@ Challenge 9 is a really interesting one, and is probably in the top 3 challenges
 What kind of crackme doesn't even ask for the password? We need to work on our COMmunication skills.
 ```
 
-Orientation
------------
+
+## Orientation
 
 Running the executable indeed doesn't seem to do much as the note states. No dialog box, no command prompt, nothing. How are we supposed to do a challenge like this?
 
@@ -34,8 +38,7 @@ Immediately we can see some interesting things.
 Getting a hold of these files is easy; just set a breakpoint on `CreateFileW` using any debugger like x64dbg to stop execution before  `cfs.dll` is removed from the disk again. `credHelper.dll` is never removed, so we can just grab it directly from our AppData folder. A copy of the files can be found [here](cfs.dll) and [here](credHelper.dll).
 
 
-Analysing credHelper.dll
-------------------------
+## Analysing credHelper.dll
 
 If we open `credHelper.dll` in Ghidra, and look up the `DllRegisterService` export, we can see all it does is adding some keys to the registry:
 
@@ -174,8 +177,7 @@ The encrypted flag data is:
 Therefore, the only thing we need is figure out what the right password is to use as a decryption key for this RC4 encrypted buffer.
 
 
-Analysing cfs.dll
------------------
+## Analysing cfs.dll
 
 Let's have a look at the `cfs.dll` that gets dropped in our system folder. Opening it up in Ghidra shows not too much code actually. Let's look at the entrypoint:
 
@@ -269,8 +271,8 @@ Hold up, this interprets the input value as a function pointer, and then calls i
 
 Surely something like this should never have been signed. I must have misinterpreted something. 
 
-Rootkit as a service, brought to you by Capcom
------------------------------------------------
+
+## Rootkit as a service, brought to you by Capcom
 
 Turns out, it is actually correct. A quick Google search for Capcom vulnerable driver and the weird `Htsysm72FB` string, confirms exactly our suspicion:
 
@@ -280,8 +282,8 @@ What in the world...
 
 Some further research brings us to [this](https://www.youtube.com/watch?v=pJZjWXxUEl4) very good YouTube video by OJ Reeves. In the video, he explains in great detail how it works, and how to exploit it. It also talks a great deal about how to debug kernel drivers using WinDbg, which we will be doing shortly as well. Be sure to give it a watch if you haven't already!
 
-Finding the hidden driver
--------------------------
+
+## Finding the hidden driver
 
 We now know that the `DeviceIoControl` passes on some code that is executed in kernel space. Let's figure out where this function is called in our original `crackstaller.exe`. A quick cross reference gives us the following:
 
@@ -342,8 +344,8 @@ We can easily get a hold of this hidden driver by simply launching a debugger, s
 
 A copy of the embedded file can be found [here](driver.sys).
 
-Analysing driver.sys
---------------------
+
+## Analysing driver.sys
 
 Since the driver.sys is not loaded normally, the file is not mapped correctly in memory, nor are imports resolved. Having a quick look at `DriverBootstrap`, we can notice that it is simply resolving this issue by manually mapping the file into memory, and then calling the original entrypoint of the driver. It does that by allocating heaps with the name `"FLAR"`. That's generally a good sign we are on the right track!
 
@@ -421,8 +423,8 @@ ulonglong FUN_140004570(longlong driverObject,longlong notifyClass,REG_CREATE_KE
 
 This function contains a lot of code. Way too much to analyse by hand. What is important to note though is the call to `ZwCreateKey`, that seems to update the contents of one of the values in our registry key. Instead of working out exactly what each and every crypto function does, let's do some dynamic analysis and let the program just do it for us.
 
-Getting the password with WinDbg
---------------------------------
+
+## Getting the password with WinDbg
 
 There is a lot of tutorials on how to set up WinDbg for kernel debugging. Personally, I used [this tutorial](https://www.virtualbox.org/wiki/Windows_Kernel_Debugging), since I worked with VirtualBox, however the same principles apply for other virtual machine software. You set up a COM serial port in your VM settings, and let WinDbg connect to it.
 

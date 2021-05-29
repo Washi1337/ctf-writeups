@@ -1,5 +1,9 @@
-2 - garbage
-===========
+---
+title: 2 - garbage
+layout: default
+---
+
+# 2 - garbage
 
 **Time spent:** around 20 minutes
 
@@ -9,8 +13,7 @@ The second challenge of flare-on 2020 can either be very easy, or very difficult
 
 I heard a lot of people got stuck on this one, which is very understandable if you are not very familiar with the PE file format. Let's go through it step-by-step.
 
-Orientation 
------------
+## Orientation
 
 The first thing to try, is to just run it. As you might have guessed, this does not work. 
 
@@ -35,8 +38,7 @@ upx: garbage.exe: OverlayException: invalid overlay size; file is possibly corru
 
 It seems some of the PE headers are corrupt. It complains about some size being incorrect. 
 
-"Fixing" the sections
----------------------
+## "Fixing" the sections
 
 When a file is incomplete, it usually means it is too short. Looking again at the sections, we can see that the last section `.rsrc` starts at file offset 0x9E00, and has a size of 0x400. However, if we look in a hex editor, such as HxD, we can quickly see that some of the section's data got cut off:
 
@@ -59,8 +61,7 @@ Unpacked 1 file.
 
 This time around, it does not complain. Success!
 
-"Fixing" resources
-------------------
+## "Fixing" resources
 
 Except there is a problem. Running the application results in the following error:
 
@@ -74,8 +75,7 @@ I chose the latter one :). This can be done by simply clearing out the directory
 
 Save it, and run it. Should be fine now right?
 
-Fixing imports
---------------
+## Fixing imports
 
 Nope, we are still greeted with an error message:
 
@@ -87,8 +87,7 @@ Nope, we are still greeted with an error message:
 
 No wonder it could not find the imported DLLs. The module names are cleared out! We can easily figure out the original names of these modules by simply doing a quick Google search for one of the imported functions for each and every import. The module names are "kernel32.dll" and "shell32.dll".
 
-Fixing relocations
-------------------
+## Fixing relocations
 
 The application still does not run as expected, but it does not give an error anymore. Looking again at the sections and the data directories, we can observe one final issue. 
 
@@ -100,8 +99,7 @@ The binary contains a section called `.reloc`, which is used for storing base re
 
 Copying over the virtual address and the size from the `.reloc` section to the appropriate data directory fixes the binary, and the app is runnable.
 
-Getting the flag
------------------
+## Getting the flag
 
 Turns out, this is all we need to do. The final application drops a vbs script and executes it. This script prompts the flag:
 

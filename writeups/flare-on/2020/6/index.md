@@ -1,5 +1,9 @@
-6 - codeit
-==========
+---
+title: 6 - codeit
+layout: default
+---
+
+# 6 - codeit
 
 **Time spent:** 3 hours
 
@@ -9,8 +13,8 @@ The sixth challenge is called codeit, a simple application that asks you for som
 
 ![Figure 1](gui1.png)
 
-Orientation
------------
+
+## Orientation
 
 If we drag this application into a program like Detect It Easy, we can quickly see that this program is UPX packed, and underneath it, an AutoIt program is conceiled.
 
@@ -28,8 +32,8 @@ This extracts three files:
 
 Although it is probably more readable than x86 code, the script is obfuscated by renaming all variables and functions to random strings, and replacing all constants with some string decoder function call or a random global variable. 
 
-Deobfuscating all constants
----------------------------
+
+## Deobfuscating all constants
 
 The first thing to notice is that the program declares a lot of global variables that are assigned exactly once (lines 134-158).
 
@@ -52,8 +56,8 @@ EndFunc
 
 With this in mind, and some regex selection, we can make a simple python script that does a find and replace in the original source code. The script can be found [here](deobfuscate.py). After we ran it, we can remove the remnants of the global variable declarations, and we end up with a script like [here](output.au3).
 
-The detective work
-------------------
+
+## The detective work
 
 Now the real fun starts. If you use an editor like Visual Studio Code, you can easily collapse all functions using `Ctrl+K+0`. Doing this gives us a good overview of the complete program.
 

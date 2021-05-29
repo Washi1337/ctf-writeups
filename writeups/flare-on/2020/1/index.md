@@ -1,5 +1,9 @@
-1 - Fidler
-==========
+---
+title: 1 - Fidler
+layout: default
+---
+
+# 1 - Fidler
 
 **Time spent:** around 10 minutes
 
@@ -7,8 +11,7 @@
 
 The first challenge of the anual flare-on CTF always starts relatively easy and this year is no exception. We are given a game written in Python, and a message that tells us to beat the game to reveal the flag.
 
-The password screen
--------------------
+## The password screen
 
 Starting up the main python script `fidler.py` prompts us with the following password screen:
 
@@ -65,8 +68,7 @@ ghost
 
 Typing this into the real game results in unlocking the actual game.
 
-Beating the game
-----------------
+## Beating the game
 
 The main game is a simple autoclicker game, and it tells use to get to 100 billion coins to win.
 

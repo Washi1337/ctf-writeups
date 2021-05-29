@@ -1,5 +1,9 @@
-4 - report
-==========
+---
+title: 4 - report
+layout: default
+---
+
+# 4 - report
 
 **Time spent:** 2 hours
 
@@ -7,8 +11,7 @@
 
 For the fourth challenge in the series, you are given nothing more than an Excel sheet called `report.xls`. The message tells us that the file is infected, and that we should have a look at it.
 
-Orientation
------------
+## Orientation
 
 Opening the report, we are greeted with a message that the document was made using an "older version of Office", and that we should click on "Enable content" to enable the totally-not-a-virus macros.
 
@@ -28,8 +31,7 @@ Nothing seems to be out of the ordinary in terms of syntax errors. Odd! If we lo
 
 ![Figure 3](office4.png)
 
-Recreating the script in Python
--------------------------------
+## Recreating the script in Python
 
 Since the script doesn't run, let's try to recreate it. In `ThisWorkbook1` we see that `folderol` of `Sheet1` is our main procedure of the script. We immediately see the script is obfuscated, but not heavily. In particular, a lot of the strings seem to be stored in the `onzo` variable, and are decoded using the `rigmarole` function. Looking at line 38, `onzo` is nothing more than the contents of the `L` label in our form, splitted by `.`.
 
@@ -138,8 +140,8 @@ However, it outputs a sound file ([stomp.mp3](stomp.mp3)) with the title "This i
 
 What did we miss?
 
-Introduction to VBA stomping
-----------------------------
+
+## Introduction to VBA stomping
 
 The clue is in the file name of output mp3 file.
 
@@ -148,8 +150,7 @@ It so happens that documents containing VBA code do not directly interpret the V
 The problem with this is, when Excel notices that some P-Code exists in the file, it will execute this code, without compiling the original source first. This happens even if the P-Code does not match the original code. An attacker could therefore construct a malicious document, by compiling a VBA script to P-Code, and removing or replacing the original VBA code in the document with something completely different. This effectively hides the true program that is executed from the GUI editor that is built into Office products. This technique is also called VBA stomping, which was referred to in the name of the mp3 file.
 
 
-Finding the real program
-------------------------
+## Finding the real program
 
 Luckily, there are various tools to deal with stomped VBA documents and sheets. One of them is `oletools`, which can be found [here](https://github.com/decalage2/oletools). Running the `olevba` script on `report.xls`, confirms that the file is indeed stomped:
 

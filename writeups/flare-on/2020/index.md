@@ -1,10 +1,13 @@
-Flare-On 2020
-=============
+---
+title: Flare-On 2020
+layout: default
+---
+
+# Flare-On 2020
 
 This directory contains write-ups with my solutions for Flare-On 2020 that was hosted by FireEye from September 11 to October 23 2020. 
 
-Table of Contents
------------------
+## Table of Contents
 
 - [1 - Fidler](1)
 - [2 - garbage](2)
@@ -18,12 +21,10 @@ Table of Contents
 - [10 - break](10)
 - [11 - rabbithole](11)
 
-Binaries
---------
+## Binaries
 Download the binaries [here](http://flare-on.com/files/Flare-On7_Challenges.zip).
 
 
-Bragging rights
----------------
+## Bragging rights
 
 ![Achievements screen](solved-screenshot.png)

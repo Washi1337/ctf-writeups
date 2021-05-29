@@ -1,5 +1,9 @@
-8 - re_crowd
-============
+---
+title: 8 - re_crowd
+layout: default
+---
+
+# 8 - re_crowd
 
 **Time spent:** 3-4 hours
 
@@ -9,8 +13,8 @@ Challenge 8 is a little bit of a weird one. I am not sure why challenge was plac
 
 ![Figure 1](ttt1.png)
 
-Orientation
------------
+
+## Orientation
 
 The problem with the game of tic-tac-toe, is that it is very easy to implement a perfect AI that never loses; either always wins or plays in such a way that the game ends in a draw. If we start playing a few games to see what happens, we can see that this is indeed the case. The AI (X) always gets the first turn, and always puts its X in the middle of the board.
 
@@ -275,8 +279,8 @@ void CreateWSLInstance(undefined8 param_1,uint param_2)
 
 Even though the pointer-magic that is happening here might be hard to understand, the strings do a great job at explaining what is happening here. We are extracting a resource file, which happens to be an ELF binary, and then run it in an WSL environment. So even though the original binary is a normal Windows PE binary, it seems the real challenge is actually implemented in the ELF binary running in a Unix environment.
 
-Reversing the ELF binary
------------------------
+
+## Reversing the ELF binary
 
 After opening the ELF binary in Ghidra, and renaming a few variables and functions, you'll notice that the embedded file is not too complicated. It has one big main procedure that keeps looping until the main program terminates. In this loop, it receives the command from the main application, updates the board, determines the move of the AI player, and then sends the entire board state back to the main application. You will also notice that the AI that is implemented indeed is a perfect AI that either always wins or draws. 
 
@@ -349,8 +353,8 @@ else {
 
 We see in the above the code that is responsible for building up the final message "It's a draw!", "X wins!" or "O wins!". It depends on a single variable that I called `WINNER`. If `WINNER` is equal to `O`, then it executes a lot of code, that eventually ends in something that works on the string `@flare-on.com`. Figuring out where `WINNER` is set reveals that `FUN_001014b0` determines the winner of the game. 
 
-Memory patching the game
-------------------------
+
+## Memory patching the game
 
 Let's trick the program into thinking we won the game anyways. One way of doing this, would be to patch this function `FUN_001014b0` in such a way that it always returns 'O' instead of 'X' when a winner is decided.
 

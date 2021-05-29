@@ -1,5 +1,9 @@
-3 - wednesday
-=============
+---
+title: 3 - wednesday
+layout: default
+---
+
+# 3 - wednesday
 
 **Time spent:** 2 hours
 
@@ -9,8 +13,7 @@ The third challenge is another game. In the game, you play as a frog on an obsta
 
 ![Figure 1](game.png)
 
-Orientation
------------
+## Orientation
 
 If you play the game a few times, you will quickly notice you'll die quite often randomly, even if it looks like you ducked in time or jumped over the obstacle correctly. It seems the game lacks some visual cues on whether to duck or jump for every obstacle.
 
@@ -167,8 +170,7 @@ LAB_00433e79:
 
 Again, a very large function for which most of the code is not really relevant to us. The key take away again is how the previously mentioned variables are used and updated. Similar to the `resetEverything` function, we can see that `_day_index` is increased twice. We can also see that a `reset` function is called twice. Towards the end, we see a big if statement that handles updating the score labels, and finally we see a very interesting if statement, which is the deciding factor on whether the game should switch to the win scene or not.
 
-Letting the game think we have won
-----------------------------------
+## Letting the game think we have won
 
 My first attempt to win the game was making two small changes in the program. The first change is to patch out the if statement that decides on whether to reset the game (`0x00433d5c`), and patching out the condition where we check whether we won the game or not (`0x00433fa7-0x00433fb3`).
 
@@ -176,8 +178,7 @@ This did let me "win" the game immediately, but unfortunately this didn't seem t
 
 ![Figure 4](attempt1.png)
 
-Let's be a bit more smart about this
-------------------------------------
+## Let's be a bit more smart about this
 
 Maybe the program requires you to actually win the game by successfully avoiding all obstacles (who would have thought?!). I decided to look at how obstacles are actually generated. For this, this `reset` function that we have seen a few times already seemed interesting. Let's have a look:
 

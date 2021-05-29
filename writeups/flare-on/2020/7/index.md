@@ -1,5 +1,9 @@
-7 - re_crowd
-============
+---
+title: 7 - re_crowd
+layout: default
+---
+
+# 7 - re_crowd
 
 **Time spent:** 4-5 hours
 
@@ -7,8 +11,8 @@
 
 Up until now, most challenges have been fairly straightforward with a clear target executable file (with the exception of challenge 4). However, the more we progress, the more realistic they get in terms of an incident response scenario. In the seventh task, we are not given a binary or script that we can just throw into a disassembler and/or debugger. Instead, we are provided with a network packet capture, along with a note that tells us a server of a company called Reynholm Industries was hacked. Our job is to figure out what had happened and what they have stolen from the server, without having access to the server itself.
 
-Orientation
------------
+
+## Orientation
 
 The first thing that you'll probably notice while opening up the pcapng file in Wireshark, is that the capture consists of a lot of HTTP traffic. Let's look at some of the files that are transmitted (File > Export Objects > HTTP).
 
@@ -46,8 +50,8 @@ If we look a little further in the capture, we can see that a lot of odd-looking
 
 Clearly something fishy is going on here.
 
-Initial Investigation
----------------------
+
+## Initial Investigation
 
 We know that the server runs IIS 6.0. We also know that the server receives a bunch of large malformed PROPFIND requests. PROPFIND is part of the WebDAV HTTP extension. Furthermore, when a program crash is triggered by large malformed data inputs, it is often an indication of what is known as a buffer overflow vulnerability. If you don't know what buffer overflow vulnerabilities are, there's tons of articles and/or videos about it all across the internet.
 
@@ -74,8 +78,8 @@ with open("decrypted.bin", "wb") as f:
 
 If we pick a random weird-looking PROPFIND request and feed the data through the script, we get a nice decoded binary file containing x86 shell-code. In the remaining, we are assuming the shell code and its addresses as indicated by [this dump](decrypted.bin), which has an entrypoint at address 0x151.
 
-Let the reversing begin!
-------------------------
+
+## Let the reversing begin!
 
 The shell code's entry point starts off with a call to `0x000001d8`, which we refer to as `shellmain` from now on. Looking into `shellmain`, we see some weird stuff going on:
 
@@ -123,8 +127,8 @@ void FUN_00000156(int param_1)
 
 For the untrained eye, this would look really weird. What is `in_FS_OFFSET`? What are these magic constant offsets? Before we can answer that, let's talk a bit about some windows internals.
 
-TEB, PEB, and more...
----------------------
+
+## TEB, PEB, and more...
 
 If we do a quick search on the web on what the `FS` register is used for on Windows 32-bit, we quickly find out that a lot of pages talk about what is known as the **Thread Environment Block**, or TEB for short. [Wikipedia](https://en.wikipedia.org/wiki/Win32_Thread_Information_Block) has a good article about this. The TEB is a data structure that is associated to every thread that is running on the system, and contains all kinds of information that help Windows run the thread code. In particular, it contains a field at offset `0x30`, which is a pointer to what is known as the **Process Environment Block**, or PEB for short. The PEB structure serves a role similar to the TEB, except it is assigned to every process instead of every thread. A more detailed description of both structures can be found on https://undocumented.ntinternals.net/, which is a gold mine of inforamtion about all kinds of internal Windows structures.
 
@@ -149,8 +153,8 @@ typedef struct _LDR_MODULE {
 
 We can see that it contains some interesting definitions like the file name, as well as the base address and size of the module.
 
-Calling procedures by hash codes
---------------------------------
+
+## Calling procedures by hash codes
 
 How does this information help us? Let's go back to our function. The first line tells us that we are accessing the pointer at `FS + 0x30`. This is a reference to the current PEB! Then we take the offset 0xC, and dereference again, this is the pointer to the `PEB_LDR_DATA`. Finally we increase that pointer by 0x14 to get to the first `LDR_MODULE` entry in our loaded modules list. Now that we know that, we can start retyping in Ghidra:
 
@@ -223,8 +227,8 @@ if (exports_ptr != 0) {
 
 This reveals that our mysterious function is calling exports by a hash code! We can build a mapping of known hash codes to functions, by writing a C# program that takes every single DLL in `C:\Windows\System32`, parses the PE headers, and computes the hash code of every single export that they define. An implementation of such a program can be found [here](HashToFunction.cs). Disclaimer: It uses AsmResolver to do the PE parsing, so it is a bit of self-advertisement :).
 
-Making heads and tails of the shell code
-----------------------------------------
+
+## Making heads and tails of the shell code
 
 We know that the return address is used as an address to call exports by a hash code. We also have constructed a mapping from hashes. All that is left is simply annotating everything in the original code:
 
@@ -292,8 +296,8 @@ Even though the code still looks like a lot of pointer magic, the general flow i
 
 ![Figure 3](ghidra1.png)
 
-Finding and decrypting the payload
-----------------------------------
+
+## Finding and decrypting the payload
 
 We know the encryption algorithm, let's find the data to decrypt in the packet capture. This is easy to find. We just need to find any outgoing connection from the server. It so happens to be TCP stream 50:
 
@@ -317,8 +321,9 @@ with open("payload.bin", "wb") as f:
 
 A dump can be found in [payload.bin](payload.bin).
 
-Are we there yet?
------------------
+
+## Are we there yet?
+
 It so happens this decrypted payload is another piece of shellcode. Here is the entrypoint:
 
 ```c
@@ -384,8 +389,8 @@ void actual_main(void)
 
 Fairly obvious what is happening here, now that we have resolved all imports. We are reading the `C:\\accounts.txt`, encrypting it with RC4, this time using `intrepidmango` as encryption key, and then sending it over through a socket. 
 
-Getting the flag
-----------------
+
+## Getting the flag
 
 It so happens this response data is sent in TCP stream 51 of the packet capture. An export of the transmitted data can be found in [encrypted_response.bin](encrypted_response.bin):
 

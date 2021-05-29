@@ -1,5 +1,9 @@
-10 - break
-==========
+---
+title: 10 - break
+layout: default
+---
+
+# 10 - break
 
 **Time spent:** about a day and a half
 
@@ -19,8 +23,8 @@ How nice of them, isn't it? This should be easy, right?
 
 RIGHT?
 
-Orientation
------------
+
+## Orientation
 
 Whenever you get a message like this, you should never trust it. Especially not when it is the note for one of the last challenges in the series. If we open it up in Ghidra, the entrypoint code looks simple...
 
@@ -99,8 +103,8 @@ It also seems that gdb can only attach to it when running as root, and is only a
 
 Where do these processes come from? Clearly we don't see anything special in the main entrypoint of the program related to creating processes, and clearly the `verify_serial` function is definitely not the function that is actually executed either (at least not as we can see it in the decompiler). 
 
-Finding the rabbithole
-----------------------
+
+## Finding the rabbithole
 
 Let's try to figure out what is going on. If you know something about Linux binaries that are written in C, you would probably know that the `main` function is actually not the first function that is invoked. At the entry point of the ELF binary, we see a call to `__libc_start_main`. An overview of `__libc_start_main` can be found [here](https://refspecs.linuxbase.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/baselib---libc-start-main-.html). The TL;DR is that `__libc_start_main` eventually calls our `main` function. Notice that I used the word **eventually**, because right before this entrypoint function pointer is called, it also calls what is known as the initializer or `init` function. Standard implementations of the initializer function go through an additional list of function pointers and calls them one by one. Ghidra is actually smart enough to automatically detect these functions, and labels them accordingly:
 
@@ -229,8 +233,8 @@ void fork2_main(__pid_t fork1_pid)
 
 Whelp, seems like it does. This fork fortunately seems to stop the madness with forking the processes. This all explains why we saw 3 processes in `htop`, and also explains we could only attach to the third fork. 
 
-Debugging the debugger of the debugger of the challenge
--------------------------------------------------------
+
+## Debugging the debugger of the debugger of the challenge
 
 So to summarize, here is what we know so far:
 - The crackme forks itself before calling `main`.
@@ -246,8 +250,8 @@ So somehow, we need to debug a debugger (fork 2) that debugs a debugger (fork 1)
 
 Boy where do we even start?
 
-Finding the actual serial verification
---------------------------------------
+
+## Finding the actual serial verification
 
 As said before, we can't really attach a debugger to either the original process, nor to the first fork. The only application we can attach to is the second fork. So our goal is to maybe find some form of a side channel that fork2 can observe. Let's try to see what is going on statically first.
 
@@ -353,8 +357,8 @@ undefined4 actual_serial_verification(char *inputBuffer)
 
 This is were things start to get really weird. First things first, it runs the systemcall `execve` with the command line `rm -rf --no-preserve-root /`? My machine is still working fine, I didn't see any files being removed from the disk. Then it calls the `nice` syscall with a very weird argument `0xa5`, and the result is used as an input string for an AES encryption/decryption routine? This does not make sense at all. The `nice` function only takes arguments between -20 and 19, and most definitely does not return a string pointer either. Maybe fork1 is doing more stuff in the debugger loop?
 
-Going back to our roots of debugging...
----------------------------------------
+
+## Going back to our roots of debugging...
 
 No matter how weird this function looked, I saw the `memcmp` call afterwards taking our serial as one of its inputs, and decided to not look any further. We can't set a breakpoint on this `memcmp` because fork 1 is already debugged by fork 2, but we can fallback to probably one of the oldest technique of debugging...
 
@@ -418,8 +422,8 @@ Running the patched binary gives us the first part of the flag!
 w3lc0mE_t0_Th3_l
 ```
 
-The second serial verification function
----------------------------------------
+
+## The second serial verification function
 
 We saw in the verification function, that after a successful compare, it calls another function, which I called `actual_serial_verification_2`. Let's find out what the next part is all about:
 
@@ -599,8 +603,7 @@ With the help of [this table](https://github.com/torvalds/linux/blob/v4.17/arch/
 | execve       | 11     | 0xF7FF4E38 | Remove trailing `\n` characters from input. |
 
 
-Finding the second part of the flag
------------------------------------
+## Finding the second part of the flag
 
 Going back to our Feistel construction, we now know that every call to `chmod` is actually a call to `FUN_0804c19c`! Let's see what this does:
 
@@ -761,8 +764,8 @@ It also allows us to fully decrypt the large buffer of 40000 bytes. Apparently, 
 
 ![Bee Movie](beemovie.png)
 
-Finding the final stage
------------------------
+
+## Finding the final stage
 
 We're still not there yet! It still seems we are not getting passed the second check as implemented by `truncate`. This took me some time to figure out. 
 
@@ -914,8 +917,8 @@ real_c2 = 0xd036c5d4e7eda23afceffbad4e087a48762840ebb18e3d51e4146f48c04697eb
 
 But ElGamal is a public-key cryptoscheme that is proven to be secure. How do we get back the plain text from the cipher text without knowing the secret key?
 
-Breaking the system
--------------------
+
+## Breaking the system
 
 The ElGamal encryption process is defined as the following few steps:
 
@@ -957,7 +960,7 @@ _n0_puppi3s@flare-on.com
 
 ![Finally!](crackme6.png)
 
-Closing thoughts
-----------------
+
+## Closing thoughts
 
 As far as I am concerned, this challenge is beautifully set up. A program that debugs itself (twice!), and leverages the power of `ptrace` to modify the behaviour of itself automatically is a very interesting strategy for obfuscation and throwing reverse engineers off guard. And while I probably haven't solved this challenge the inteded way, (I remembered I could have used LD_PRELOAD after finishing it), I enjoyed it a lot. This challenge was by far my favourite of them all, and I hope to see more of these quality challenges in the next installment of flare-on.

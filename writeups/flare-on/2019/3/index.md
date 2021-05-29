@@ -1,5 +1,9 @@
-3 - Flarebear
-=============
+---
+title: 3 - Flarebear
+layout: default
+---
+
+# 3 - Flarebear
 
 **Time spent:** 1 to 2 hours
 

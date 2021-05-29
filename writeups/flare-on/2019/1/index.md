@@ -1,5 +1,9 @@
-1 - Memecat Battlestation
-=========================
+---
+title: 1 - Memecat Battlestation
+layout: default
+---
+
+# 1 - Memecat Battlestation
 
 **Time spent:** around 15 minutes (I did the BHUSA 2019 variant)
 

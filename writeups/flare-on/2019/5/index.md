@@ -1,5 +1,9 @@
-5 - demo
-========
+---
+title: 5 - demo
+layout: default
+---
+
+# 5 - demo
 
 Note: this writeup is definitely not an efficient way of solving the challenge. I realized after the fact I could have used tools to automatically extract meshes from running DirectX applications, and save myself a lot of trouble. I just didn't think of it at the time. 
 

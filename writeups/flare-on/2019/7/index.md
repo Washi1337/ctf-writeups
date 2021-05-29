@@ -1,5 +1,9 @@
-7 - wopr
-========
+---
+title: 7 - wopr
+layout: default
+---
+
+# 7 - wopr
 
 **Time spent:** 3-4 hours 
 
@@ -15,8 +19,7 @@ The only game that is playable, however, is the one titled "GLOBAL THERMONUCLEAR
 
 Obviously I don't know the launch code, let's find out what it is!
 
-Orientation
-------------
+## Orientation
 
 Opening the file in ghidra, and inspecting the strings reveals the following:
 

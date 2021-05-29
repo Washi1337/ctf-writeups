@@ -1,5 +1,9 @@
-8 - snake
-=========
+---
+title: 8 - snake
+layout: default
+---
+
+# 8 - snake
 
 **Time spent:** 2 hours
 
@@ -10,8 +14,7 @@ The 8th challenge is an interesting one. We are given a zip archive that does no
 ![Screenshot 1](screenshot1.png)
 
 
-Orientation
------------
+## Orientation
 
 To run a NES ROM, we can use any NES emulator. Since we do not only wish to just play the game, but also reverse engineer it, we have that [Mesen](https://mesen.ca/index.php#Downloads) is a really good choice for our tooling, as it includes quite a comprehensive debugger with tons of features that make analysis of ROMs a lot easier.
 
@@ -19,8 +22,7 @@ To run a NES ROM, we can use any NES emulator. Since we do not only wish to just
 
 Now we can try to beat the game, but honestly I am not that great at snake and frankly I do not have the patience for it either. Instead, let's try to trick the game into that we already won the game, by maybe changing the code slightly or poking around in the memory.
 
-RE'ing a NES ROM
-----------------
+## RE'ing a NES ROM
 
 NES ROMs work quite differently from normal executable files running on a computer. For one, the NES didn't really come with a full-fletched operating system like Windows or Linux. This means that most of the basic features (like I/O handling, drawing graphics etc) are all statically linked into the same ROM. Starting to reverse engineer the ROM from the beginning is therefore a very daunting task, as we would be visiting lots of code that is really not relevant to what we are looking for.
 

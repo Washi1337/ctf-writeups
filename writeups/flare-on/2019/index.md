@@ -1,5 +1,9 @@
-Flare-On 2019
-=============
+---
+title: Flare-On 2019
+layout: default
+---
+
+# Flare-On 2019
 
 This directory contains write-ups with my solutions for Flare-On 2019 that was hosted by FireEye from August 17 to September 28 2019. 
 

@@ -1,5 +1,9 @@
-9 - Reloadered
-==============
+---
+title: 9 - Reloadered
+layout: default
+---
+
+# 9 - Reloadered
 
 **Time spent:** Little under 4 hours (but could've been a lot faster :L)
 
@@ -13,8 +17,7 @@ The note says, however, that ghidra seems to be having trouble opening this file
 
 ![Figure 1](ghidra1.png)
 
-Orientation
------------
+## Orientation
 
 Since I do not own an IDA license and therefore do not have any other decompiler at my disposal that I am familiar with, I resorted to x64dbg. Opening it up in the debugger, we see that the file imports `fgets`. Lets put a breakpoint on it, enter a random key, and step till user code:
 
@@ -38,8 +41,7 @@ Oh by the way, this is the contents of `reloadered+0x13108`:
 0x1C, 0x5C, 0x22, 0x00, 0x00, 0x17, 0x02, 0x62, 0x07, 0x00, 0x06, 0x0D, 0x08, 0x75, 0x45, 0x17, 0x17, 0x3C, 0x3D, 0x1C, 0x31, 0x32, 0x02, 0x2F, 0x12, 0x72, 0x39, 0x0D, 0x23, 0x1E, 0x28, 0x29, 0x69, 0x31, 0x00, 0x39
 ```
 
-Obtaining the serial key
-------------------------
+## Obtaining the serial key
 
 Now we could delve into writing an entire solver for all the input key constraints, but we can take a shortcut. Even though we know that the flag can only be decrypted by the correct input serial (which we don't know), we do know that the decrypted string must end with the string `@flare-on.com`. This means we can do a chosen plain-text attack, and calculate the key from the encrypted data and the known suffix of the flag.
 
@@ -84,8 +86,7 @@ Furthermore, the serial key doesn't work at all.
 
 What have we missed?
 
-Addressing the big fat elephant in the room
--------------------------------------------
+## Addressing the big fat elephant in the room
 
 The observant reader and the observant reverse engineer should have spotted what is going on.
 

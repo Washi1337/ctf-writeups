@@ -1,5 +1,9 @@
-11 - vv_max
-===========
+---
+title: 11 - vv_max
+layout: default
+---
+
+# 11 - vv_max
 
 **Time spent:** About a day
 
@@ -10,8 +14,7 @@ The eleventh challenge was one of my favourite challenges out of all twelve this
 ![Figure 0](screenshot1.png)
 
 
-Orientation
------------
+## Orientation
 
 Opening the executable in Ghidra and scanning for strings gives us a nice starting point:
 
@@ -290,8 +293,7 @@ Using x64dbg we can quickly find out what the contents of `VMCODE` must be, by s
 
 Now it is time to figure out what this vm code actually does. For that we need to analyse all the opcode handlers, and write some custom tooling.
 
-Creating a disassembler
------------------------
+## Creating a disassembler
 
 Browsing quickly through the opcode handlers we find that most opcode handlers are very straight forward. Most of the opcodes take two input variables (or registers if you will) of 0x20 bytes each, perform some magic AVX/2 operation on it, and store the result in a third variable. This is for example the handler for opcode with byte `0x01`:
 
@@ -454,8 +456,7 @@ From analysing all handlers, we can obtain the following opcode table:
 From this we can easily create a disassembler, by simply following the table. The disassembler code can be found in [disassembler.py](disassembler.py). Note that the disassembler doesn't handle every opcode, just the ones that were needed to disassemble the embedded VM binary data. The entirety of the disassembled pseudo code can be found in [disassembly.asm](disassembly.asm).
 
 
-Analysing the devirtualized code
---------------------------------
+## Analysing the devirtualized code
 
 Now what we can do of course, is go over the code line-by-line, and try to analyse whats going on. Hoewever the code is really long and seems to implement quite a complex cryptographic function. Seems like too much work to me!
 
@@ -522,8 +523,8 @@ v2 = vpermd(v2, v13)
 
 Reversing these AVX/2 instructions was a tricky job, but more doable than reversing a SHA-256 algorithm. It takes some pen and paper to figure out all the crazy operations and how to reverse them (let me know if you want a more detailed explanation here). The full solution can be found in [solution.py](solution.py).
 
-Final steps
------------
+## Final steps
+
 The only thing to find out is what hash to reverse. Looking back at the key verification function, we see:
 
 ```c

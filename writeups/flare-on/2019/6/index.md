@@ -1,5 +1,9 @@
-6 - BMP Hide
-============
+---
+title: 6 - BMP Hide
+layout: default
+---
+
+# 6 - BMP Hide
 
 **Time spent:** 1.5 hours
 
@@ -9,8 +13,7 @@ The next challenge is again a .NET binary. This should be easy right? Not for th
 
 The zip archive comes with an `image.bmp`, together with a note stating that we probably cannot really trust the photo. Along with it is an executable called `bmphide.exe`. This basically screams a steganography challenge.
 
-Orientation
------------
+## Orientation
 
 Opening up the `bmphide.exe` in dnSpy, we see that the main method takes three commandline arguments, all of which seem to be file paths:
 
@@ -44,8 +47,7 @@ Unfortunately, `bmphide.exe` does not implement a reverse for the process, so we
 
 A lot of work already has been done by dnSpy's decompiler. We can just copy-paste the code from the `Program` class to reimplement the code. Right? 
 
-The funky business
-------------------
+## The funky business
 
 Wrong! If we try to debug the application using dnSpy, we notice it immediately throws a StackOverflow exception in the `Program.Init` method, that does not occur when we run the program without the debugger. What kind of weird initialization procedure does a simple steganography program really need? Let's have a look:
 
@@ -135,8 +137,7 @@ b'getJit\x00\x00'
 
 We also see further down that the address of `A.handler` is written to the result of `getJit`. For the trained eye this is a no-brainer to what is happening here, but for the ones that don't know what is going on, let me explain: 
 
-Crash course JIT hooks
-----------------------
+## Crash course JIT hooks
 
 Let us have a look at the definition of `getJit` by looking at how this function is defined in [CoreCLR](
 https://github.com/dotnet/coreclr/blob/c51aa9006c035ccdf8aab2e9a363637e8c6e31da/src/inc/corjit.h#L382
@@ -266,8 +267,7 @@ public static byte[] h(byte[] data)
 
 The program now also runs again in dnSpy. So that makes things a lot easier.
 
-But there is more!
-------------------
+## But there is more!
 
 At this point I set a breakpoint on `Program.h` in dnSpy and stepped through the code to see what was going on. Then I noticed something is still not completely right here. The call to `Program.a` does not transfer control to `Program.a` but to `Program.b`, and `Program.c` transfers control to `Program.d`? What have we missed?
 
@@ -306,8 +306,7 @@ public static byte[] h(byte[] data)
 }
 ```
 
-Reversing the logic
--------------------
+## Reversing the logic
 
 We now have reversed enough to actually start reversing the code that was responsible for hiding the data in our image. Looking back at `Program.Main`, we see that we first call `Program.h` on our secret data. 
 
@@ -439,8 +438,7 @@ private static void Main(string[] args)
 
 And we can start decrypting!
 
-Decryption
-----------
+## Decryption
 
 Running our program with the provided image.bmp:
 

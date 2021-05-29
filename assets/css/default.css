@@ -154,3 +154,17 @@ a:hover {
 a:active {
     color: #a0a0a0;
 }
+
+table {
+    margin: 20px 0px;
+}
+
+th, td {
+    padding: 10px 20px;
+    border: 1px solid #505050;
+}
+
+pre.highlight {
+    padding: 10px;
+    border: 1px solid #505050;
+}

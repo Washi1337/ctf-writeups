@@ -65,7 +65,3 @@
       items:
         - name: ClumsyVM
           link: clumsyvm
-
-- name: About
-  link: /about.html
-

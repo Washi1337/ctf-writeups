@@ -15,13 +15,23 @@
 
                                         {% if subitem.items %}
                                             <div class="submenu">
+                                                {% if subitem.numbered %}
+                                                <ol class="fw-normal pb-1">
+                                                {% else %}
                                                 <ul class="list-unstyled fw-normal pb-1">
-                                                    {% for subsubitem in subitem.items %}
-                                                    <li>
-                                                        <a href="{{ item.link }}/{{ subitem.link }}/{{ subsubitem.link }}" class="link-dark rounded">{{ subsubitem.name }}</a>
-                                                    </li>
-                                                    {% endfor %}
+                                                {% endif %}
+
+                                                {% for subsubitem in subitem.items %}
+                                                <li>
+                                                    <a href="{{ item.link }}/{{ subitem.link }}/{{ subsubitem.link }}" class="link-dark rounded">{{ subsubitem.name }}</a>
+                                                </li>
+                                                {% endfor %}
+
+                                                {% if subitem.numbered %}
+                                                </ol>
+                                                {% else %}
                                                 </ul>
+                                                {% endif %}
                                             </div>
                                         {% endif %}
                                     </li>

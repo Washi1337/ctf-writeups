@@ -4,14 +4,14 @@
             {% for item in site.data.navigation %}
                 {% if item.items %}
                     <li class="nav-item">
-                        <a href="{{ item.link }}" class="nav-link">
+                        <a href="/ctf-writeups/{{ item.link }}" class="nav-link">
                             {{ item.name }} 
                         </a>
                         <div class="submenu">
                             <ul class="list-unstyled fw-normal pb-1">
                                 {% for subitem in item.items %}
                                     <li>
-                                        <a href="{{ item.link }}/{{ subitem.link }}" class="nav-link nav-sub-link rounded">{{ subitem.name }}</a>
+                                        <a href="/ctf-writeups/{{ item.link }}/{{ subitem.link }}" class="nav-link nav-sub-link rounded">{{ subitem.name }}</a>
 
                                         {% if subitem.items %}
                                             <div class="submenu">
@@ -23,7 +23,7 @@
 
                                                 {% for subsubitem in subitem.items %}
                                                 <li>
-                                                    <a href="{{ item.link }}/{{ subitem.link }}/{{ subsubitem.link }}" class="nav-link nav-sub-link rounded">{{ subsubitem.name }}</a>
+                                                    <a href="/ctf-writeups/{{ item.link }}/{{ subitem.link }}/{{ subsubitem.link }}" class="nav-link nav-sub-link rounded">{{ subsubitem.name }}</a>
                                                 </li>
                                                 {% endfor %}
 
@@ -41,7 +41,7 @@
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ item.link }}">
+                        <a class="nav-link" href="/ctf-writeups/{{ item.link }}">
                             {{ item.name }}
                         </a>
                     </li>

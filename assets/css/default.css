@@ -1,5 +1,6 @@
 body {
     font-size: 0.875rem;
+    background: rgb(30, 30, 30);
 }
 
 .feather {
@@ -15,11 +16,7 @@ body {
 .sidebar {
     position: fixed;
     top: 0;
-    /* rtl:raw:
-right: 0;
-*/
     bottom: 0;
-    /* rtl:remove */
     left: 0;
     z-index: 100; /* Behind the navbar */
     padding: 48px 0 0; /* Height of navbar */
@@ -43,7 +40,19 @@ right: 0;
 
 .sidebar .nav-link {
     font-weight: 500;
-    color: #333;
+    color: #f0f0f0;
+}
+
+.sidebar .nav-sub-link {
+    font-weight: 400;
+    color: #a0a0a0;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0.5em;
+}
+
+.sidebar .nav-sub-link:hover {
+    color: #f0f0f0;
 }
 
 .sidebar .nav-link .feather {
@@ -101,8 +110,47 @@ right: 0;
 
 .submenu {
     padding: 0 0 0 1.5em;
+    font-size: 0.9rem;
 }
 
 .submenu > ol {
     padding-left: 1em;
+    color: #a0a0a0;
+}
+
+.content-container {
+    color: #f5f5f5;
+    padding: 20px 40px;
+}
+
+.content-container > h1 {
+    margin-bottom: 20px;
+}
+
+.content-container > h2 {
+    margin-top: 30px;
+}
+
+.content-container > h3 {
+    margin-top: 25px;
+}
+
+img {
+    max-width: 80%;
+}
+
+a:link {
+    color: rgb(53, 255, 255);
+}
+
+a:visited {
+    color: rgb(53, 255, 255);
+}
+
+a:hover {
+    color: rgb(121, 255, 255);
+}
+
+a:active {
+    color: #a0a0a0;
 }

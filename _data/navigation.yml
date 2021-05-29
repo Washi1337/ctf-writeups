@@ -2,8 +2,19 @@
   link: /
 - name: Flare-On
   link: /writeups/flare-on
+  items:
+    - name: 2019
+      link: 2019
+      items:
+        - name: 1 - Memecat Battlestation
+          link: 1
+    - name: 2020
+      link: 2020
 - name: Miscellaneous
-  link: /writeups/misc      
+  link: /writeups/misc
+  items:
+    - name: tuts4you
+      link: tuts4you
 - name: About
   link: /about.html
 

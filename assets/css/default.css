@@ -153,7 +153,7 @@ ol.submenu {
     margin: auto;
     color: #f5f5f5;
     padding: 20px 40px;
-    max-width: 1150px;
+    max-width: 1100px;
 }
 
 .content-container > h1 {
@@ -169,7 +169,7 @@ ol.submenu {
 }
 
 .content-container > p > img {
-    max-width: 60%;
+    max-width: 65%;
     margin: 10px;
     border: 1px solid #a0a0a0;
     cursor: pointer;

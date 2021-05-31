@@ -5,7 +5,7 @@
                 {% if item.items %}
                     <li class="nav-item">
                         <a href="/ctf-writeups/{{ item.link }}" class="nav-link">
-                            {{ item.name }} 
+                            {{ item.name }}
                         </a>
                         <div class="submenu">
                             <ul class="list-unstyled fw-normal pb-1">
@@ -13,7 +13,7 @@
                                     <li>
                                         <a href="/ctf-writeups/{{ item.link }}/{{ subitem.link }}" class="nav-link nav-sub-link rounded">{{ subitem.name }}</a>
 
-                                        {% if subitem.items %}
+                                        {% if subitem.items and page.url contains subitem.link %}
                                             <div class="submenu">
                                                 {% if subitem.numbered %}
                                                 <ol class="fw-normal pb-1">

@@ -1,0 +1,52 @@
+<nav id="sidebarMenu" class="col-xl-2 col-lg-3 col-md-3 d-md-block bg-dark sidebar collapse">
+    <div class="nav-items-container position-sticky pt-3">
+        <ul class="nav flex-column">
+            {% for item in site.data.navigation %}
+                {% if item.items %}
+                    <li class="nav-item">
+                        <a href="/ctf-writeups/{{ item.link }}" class="nav-link">
+                            {{ item.name }}
+                        </a>
+                        <ul class="list-unstyled fw-normal pb-1 submenu">
+                            {% for subitem in item.items %}
+                                <li>
+                                    <a href="/ctf-writeups/{{ item.link }}/{{ subitem.link }}" class="nav-link nav-sub-link rounded">{{ subitem.name }}</a>
+
+                                    {% if subitem.items and page.url contains subitem.link %}
+                                        {% if subitem.numbered %}
+                                        <ol class="submenu fw-normal pb-1">
+                                        {% else %}
+                                        <ul class="submenu list-unstyled fw-normal pb-1">
+                                        {% endif %}
+
+                                        {% for subsubitem in subitem.items %}
+                                        <li>
+                                            <a href="/ctf-writeups/{{ item.link }}/{{ subitem.link }}/{{ subsubitem.link }}" class="nav-link nav-sub-link rounded">{{ subsubitem.name }}</a>
+                                        </li>
+                                        {% endfor %}
+
+                                        {% if subitem.numbered %}
+                                        </ol>
+                                        {% else %}
+                                        </ul>
+                                        {% endif %}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ctf-writeups/{{ item.link }}">
+                            {{ item.name }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="sidebar-footer">
+        © 2019-2021 Washi<br/><a href="mailto:washi1337@protonmail.com">washi1337@protonmail.com</a>
+    </div>
+</nav>

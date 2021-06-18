@@ -1,0 +1,67 @@
+- name: Home
+  link: /
+- name: Flare-On
+  link: /writeups/flare-on
+  items:
+    - name: 2019
+      link: 2019
+      items:
+        - name: Memecat Battlestation
+          link: 1
+        - name: Overlong
+          link: 2
+        - name: Flarebear
+          link: 3
+        - name: Dnschess
+          link: 4
+        - name: demo
+          link: 5
+        - name: bmphide
+          link: 6
+        - name: wopr
+          link: 7
+        - name: snake
+          link: 8
+        - name: reloadered
+          link: 9
+        - name: Mugatu
+          link: 10
+        - name: vv_max
+          link: 11
+        - name: help
+          link: 12
+
+    - name: 2020
+      link: 2020
+      items:
+        - name: Fidler
+          link: 1
+        - name: garbage
+          link: 2
+        - name: wednesday
+          link: 3
+        - name: report
+          link: 4
+        - name: TKApp
+          link: 5
+        - name: codeit
+          link: 6
+        - name: re_crowd
+          link: 7
+        - name: Aardvark
+          link: 8
+        - name: crackinstaller
+          link: 9
+        - name: break
+          link: 10
+        - name: rabbithole
+          link: 11
+
+- name: Miscellaneous
+  link: /writeups/misc
+  items:
+    - name: tuts4you
+      link: tuts4you
+      items:
+        - name: ClumsyVM
+          link: clumsyvm

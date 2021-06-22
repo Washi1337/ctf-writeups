@@ -26,9 +26,9 @@ Exe2Aut.exe codeit.exe
 ```
 
 This extracts three files:
-- [codeit_au3](codeit_.au3): The main script.
-- [qr_encoder.dll](qr_encoder.dll): A dll used for generating QR images.
-- [sprite.bmp](sprite.bmp): The initial image that is displayed.
+- [codeit_au3](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/6/codeit_.au3): The main script.
+- [qr_encoder.dll](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/6/qr_encoder.dll): A dll used for generating QR images.
+- [sprite.bmp](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/6/sprite.bmp): The initial image that is displayed.
 
 Although it is probably more readable than x86 code, the script is obfuscated by renaming all variables and functions to random strings, and replacing all constants with some string decoder function call or a random global variable. 
 
@@ -54,7 +54,7 @@ Func arehdidxrgk($flqlnxgxbp)
 EndFunc
 ```
 
-With this in mind, and some regex selection, we can make a simple python script that does a find and replace in the original source code. The script can be found [here](deobfuscate.py). After we ran it, we can remove the remnants of the global variable declarations, and we end up with a script like [here](output.au3).
+With this in mind, and some regex selection, we can make a simple python script that does a find and replace in the original source code. The script can be found [here](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/6/deobfuscate.py). After we ran it, we can remove the remnants of the global variable declarations, and we end up with a script like [here](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/6/output.au3).
 
 
 ## The detective work

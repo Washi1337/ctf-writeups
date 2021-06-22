@@ -403,7 +403,7 @@ This tells us that all instructions either have the next offset hardcoded in the
 
 ## Disassembling and tracing the executed micro code
 
-Now we have a solid understanding of the micro code, we can build some models for the VM. You can find them in the [ClumsyVM.Architecture](src/ClumsyVM.Architecture) project.
+Now we have a solid understanding of the micro code, we can build some models for the VM. You can find them in the [ClumsyVM.Architecture](https://github.com/Washi1337/ctf-writeups/tree/master/writeups/misc/tuts4you/clumsyvm/src/ClumsyVM.Architecture) project.
 
 Let's figure out what code the CPU is executing. For this, I went into the fetch stage, and added some code to dump the current state of the entire VM on every instruction.
 
@@ -476,7 +476,7 @@ private void DumpState()
 }
 ```
 
-You can find the trace in [executiontrace.txt](dumps/executiontrace.txt). Furthermore, we can also disassemble the code directly in a similar fashion. You can find the annotated disassembly in [microcode_disassembled.txt](dumps/microcode_disassembled.txt).
+You can find the trace in [executiontrace.txt](https://github.com/Washi1337/ctf-writeups/tree/master/writeups/misc/tuts4you/clumsyvm/dumps/executiontrace.txt). Furthermore, we can also disassemble the code directly in a similar fashion. You can find the annotated disassembly in [microcode_disassembled.txt](https://github.com/Washi1337/ctf-writeups/tree/master/writeups/misc/tuts4you/clumsyvm/dumps/microcode_disassembled.txt).
 
 ## Understanding the microcode
 
@@ -563,7 +563,7 @@ public static IEnumerable<EmbeddedInstruction> Disassemble(byte[] code)
 }
 ```
 
-The raw and annotated output can be found [here](dumps/embedded_code.txt) and [here](dumps/annotated_code.txt).
+The raw and annotated output can be found [here](https://github.com/Washi1337/ctf-writeups/tree/master/writeups/misc/tuts4you/clumsyvm/dumps/embedded_code.txt) and [here](https://github.com/Washi1337/ctf-writeups/tree/master/writeups/misc/tuts4you/clumsyvm/dumps/annotated_code.txt).
  
 ## Understanding the embedded code
 

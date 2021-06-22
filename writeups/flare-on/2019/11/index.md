@@ -289,7 +289,7 @@ struct VM_CONTEXT
 };
 ```
 
-Using x64dbg we can quickly find out what the contents of `VMCODE` must be, by simply setting a breakpoint on the initialization of the VM. I put the contents into a file called [vm.bin](vm.bin).
+Using x64dbg we can quickly find out what the contents of `VMCODE` must be, by simply setting a breakpoint on the initialization of the VM. I put the contents into a file called [vm.bin](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2019/11/vm.bin).
 
 Now it is time to figure out what this vm code actually does. For that we need to analyse all the opcode handlers, and write some custom tooling.
 
@@ -453,7 +453,7 @@ From analysing all handlers, we can obtain the following opcode table:
 | `0x16` | `v[op0] = VPCMPEQB(v[op1], v[op2])`    |
 | `0x17` | `nop`                                  |
 
-From this we can easily create a disassembler, by simply following the table. The disassembler code can be found in [disassembler.py](disassembler.py). Note that the disassembler doesn't handle every opcode, just the ones that were needed to disassemble the embedded VM binary data. The entirety of the disassembled pseudo code can be found in [disassembly.asm](disassembly.asm).
+From this we can easily create a disassembler, by simply following the table. The disassembler code can be found in [disassembler.py](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2019/11/disassembler.py). Note that the disassembler doesn't handle every opcode, just the ones that were needed to disassemble the embedded VM binary data. The entirety of the disassembled pseudo code can be found in [disassembly.asm](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2019/11/disassembly.asm).
 
 
 ## Analysing the devirtualized code
@@ -521,7 +521,7 @@ v2 = vpshufb(v2, v12)
 v2 = vpermd(v2, v13)
 ```
 
-Reversing these AVX/2 instructions was a tricky job, but more doable than reversing a SHA-256 algorithm. It takes some pen and paper to figure out all the crazy operations and how to reverse them (let me know if you want a more detailed explanation here). The full solution can be found in [solution.py](solution.py).
+Reversing these AVX/2 instructions was a tricky job, but more doable than reversing a SHA-256 algorithm. It takes some pen and paper to figure out all the crazy operations and how to reverse them (let me know if you want a more detailed explanation here). The full solution can be found in [solution.py](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2019/11/solution.py).
 
 ## Final steps
 

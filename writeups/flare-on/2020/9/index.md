@@ -35,7 +35,7 @@ Immediately we can see some interesting things.
 - `cfs.dll` is then deleted afterwards.
 - Then another file called `credHelper.dll` is dropped in AppData, which seems to be registered as a COM service using `DllRegisterService`.
 
-Getting a hold of these files is easy; just set a breakpoint on `CreateFileW` using any debugger like x64dbg to stop execution before  `cfs.dll` is removed from the disk again. `credHelper.dll` is never removed, so we can just grab it directly from our AppData folder. A copy of the files can be found [here](cfs.dll) and [here](credHelper.dll).
+Getting a hold of these files is easy; just set a breakpoint on `CreateFileW` using any debugger like x64dbg to stop execution before  `cfs.dll` is removed from the disk again. `credHelper.dll` is never removed, so we can just grab it directly from our AppData folder. A copy of the files can be found [here](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/9/cfs.dll) and [here](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/9/credHelper.dll).
 
 
 ## Analysing credHelper.dll

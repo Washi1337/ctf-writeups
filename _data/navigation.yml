@@ -57,6 +57,30 @@
         - name: rabbithole
           link: 11
 
+    - name: 2021
+      link: 2021
+      items:
+        - name: credchecker
+          link: 01
+        - name: known
+          link: 02
+        - name: antioch
+          link: 03
+        - name: myaquaticlife
+          link: 04
+        - name: FLARE Linux VM
+          link: 05
+        - name: PetTheKitty
+          link: 06
+        - name: spel
+          link: 07
+        - name: beelogin
+          link: 08
+        - name: evil
+          link: 09
+        - name: wizardcult
+          link: 10
+
 - name: Miscellaneous
   link: /writeups/misc
   items:

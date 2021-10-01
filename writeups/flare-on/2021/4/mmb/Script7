@@ -1,0 +1,2 @@
+part2$='jetsam:newaui'
+PluginSet("PlugIn","part2$")

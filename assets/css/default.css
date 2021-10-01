@@ -179,7 +179,7 @@ ol.submenu {
 .content-container > p > img {
     max-width: 65%;
     margin: 10px;
-    border: 1px solid #a0a0a0;
+    /* border: 1px solid #a0a0a0; */
     cursor: pointer;
 }
 
@@ -241,7 +241,7 @@ pre.highlight {
     left: 0;
     right: 0;
     margin: auto;
-    border: 1px solid #a0a0a0;
+    /* border: 1px solid #a0a0a0; */
 }
 
 blockquote {

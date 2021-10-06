@@ -199,7 +199,9 @@ LAB_10001796:
 }
 ```
 
-As expected from the `PA30` signatures in the PCAP file, the `send_message` and `receive_message` functions use `msdelta.dll` functions as well. However, there is a bit of a twist. First of all, the message to be sent is first XOR encrypted with the key `meoow`. Secondly, we are not using the original PNG anymore as source data. This explains why using our program before on the remainder of the messages didn't yield any readable results:
+As expected from the `PA30` signatures in the PCAP file, the `send_message` and `receive_message` functions use `msdelta.dll` functions as well. However, there is a bit of a twist. First of all, the message to be sent is first XOR encrypted with the key `meoow`. Secondly, we are not using the original PNG anymore as source data, but another image. This explains why using our program before on the remainder of the messages didn't yield any readable results:
+
+> **Fun fact:** There is actually sort of a bug in the delta compression code below. The malware calculates the total size of the source data using the dimensions of the image (width * height). However this actually results in only a third of the actual number of pixel data to be used as source data in the compression algorithm, because each pixel is 3 bytes worth of RGB data.
 
 ```c
 void __fastcall send_message(undefined4 socket,void *buffer,uint length)

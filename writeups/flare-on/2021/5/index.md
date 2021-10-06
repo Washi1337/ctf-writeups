@@ -23,7 +23,9 @@ As the story suggested, all these files seem to be in an encrypted form. We also
 
 ## (Wasting time on) Basic Cryptanalysis
 
-I started off by doing some basic cryptanalysis. As it turns out, this is where my experience in playing CTF actually proved to be holding me back for a bit. Still, I wanted to include this part of my process of this challenge in this write-up, because it is still a valid attack and might work out for other types of crypto challenges. If you are interested in the actual solution of the challenge, you should skip this section.
+**If you are interested in the actual solution of the challenge, you should skip this section.**
+
+I started off by doing some basic cryptanalysis. As it turns out, this is where my experience in playing CTF actually proved to be holding me back for a bit. Still, I wanted to include this part of my process of this challenge in this write-up, because it is still a valid attack and might work out for other types of crypto challenges. 
 
 Many encryption algorithms used by malware are usually some derivation of XOR encryption algorithms. For example, one of the most widely used algorithms in malware is RC4, which is XOR that uses a special key scheduling. Furthermore, certain modes of operations (such as OFB), turn any block cipher (such as AES) into some kind of key scheduling for a simple XOR cipher in the end. We will see how we can exploit this:
 
@@ -180,14 +182,16 @@ void encrypt(char *buffer)
 }
 ```
 
-Great, now we know how the files are encrypted. Let's build a script that does the reverse. For that I grabbed some random RC4 encryption implementation from the internet, and applied the same change to it as this malware applied. The final script can be found [here](scripts/decrypt_files.py). All decrypted files can be found [here](https://github.com/Washi1337/ctf-writeups/tree/master/writeups/flare-on/2021/5/decrypted_files/).
+Great, now we know how the files are encrypted. Let's build a script that does the reverse. For that I grabbed some random RC4 encryption implementation from the internet, and applied the same change to it as this malware applied. The final script can be found [here](scripts/decrypt_files.py). All decrypted files can be found [here](https://github.com/Washi1337/ctf-writeups/tree/master/writeups/flare-on/2021/5/decrypted_files/), although you will notice that only the files starting with the letter `u` actually are readable. This is something I missed earlier on, and thought my algorithm decryption was wrong. 
+
+Now, let me warn you to fasten your seat belts, because for the remainder of the challenge, we are going in for a ride that goes downhill really fast.
 
 
 ## Riddle Me This, Riddle Me That, Who's afraid of The Big Black ... Disaster?
 
-From now on, the challenge really started crashing down, and turn into a game of guessing. Essentially, what it boils down to, is that every file starting with the same letter is part of a riddle that comes with clues on how to decrypt or decode the next riddle. The riddles are in my opinion pretty bad, have nothing really to do with reverse engineering (something I come to do when I participate in FLARE-ON), and frankly, were _very_ guessy.
+From now on, the challenge really started crashing down, and turn into a game of guessing. Essentially, what it boils down to, is that every file starting with the same letter is part of a riddle that comes with clues on how to decrypt or decode the next riddle. The riddles are in my opinion pretty bad, have nothing really to do with reverse engineering (something I come to do when I participate in FLARE-ON), and frankly were _very_ guessy. Especially because you have no idea which of the files actually contains the data that the current riddle applies to, you basically end up trying it on all files and hope for the best that one of them spits out some usable data.
 
-Given the quality of the remainder of the challenge, I don't want to spend much time on explaining how I got to my answers much. Therefore, instead I will share my notes for all the steps and their solutions:
+Given the quality of the remainder of the challenge, I don't want to spend much time on explaining how I got to my answers much. Therefore, instead I will just share my notes for all the steps and their solutions:
 
 ### U:
 Solution: Plain text
@@ -200,6 +204,9 @@ The 1st byte of the password is 0x45
 
 ### S:
 Solution: Bitwise rotate left by 1.
+
+> Why rotate by 1 to the left? Didn't the hint say something about that it does not matter if you rotate it left or right? The only way that would make sense if it is rotating by 4, since bytes use 8 bits... Very random...
+
 ```
 In the FLARE team we like to speak in code. You should learn our language, otherwise you want be able to speak with us when you escape (if you manage to escape!). For example, instead of "strawberries" we say "c3RyYXdiZXJyaWVz".
 In the FLARE language "spaghetti" is "c3BhZ2hldHRp".
@@ -217,7 +224,8 @@ The 3rd byte of the password is: 0x51
 ### B:
 Solution: XOR with password `"Reese's"`.
 
-Side note: Why is this the answer for the `B` files and not the `I` files that contain a file called `ice-cream`? The hint clearly seems to suggest that `Reese's` work great with ice-cream... Very random...
+> Why is this the answer for the `B` files and not the `I` files that contain a file called `ice-cream`? The hint clearly seems to suggest that `Reese's` work great with ice-cream... Very random again...
+
 ```
 Are you good at maths? We love maths at FLARE! We use this formula a lot to decode bytes: "ENCODED_BYTE + 27 + NUMBER1 * NUMBER2 - NUMBER3"
 If you are not good in maths, the only thing that can save you is to be a bash expert. Otherwise you will be locked here forever HA HA HA!
@@ -225,7 +233,7 @@ The 4th byte of the password is: 0x35
 ```
 
 ### I:
-Solution: Apply formula, ends up being just `c - 4`
+Solution: Apply formula, ends up being just `x - 4`
 ```
 The only problem with RC4 is that you need a key. The FLARE team normally uses this number: "SREFBE" (as an UTF-8 string). If you have no idea what that means, you should give up and bake some muffins.
 If this challenge is too difficult and you want to give up or just in case you got hungry, what about baking some muffins? Try this recipe:
@@ -254,6 +262,9 @@ The 6th byte of the password is: 0x36
 
 ### D:
 Solution: Bifid cipher with key = `"eggs"`.
+
+> Really, why do I need to look for random ingredients in Spanish recipes on the internet...
+
 ```
 Did you know that Giovan Battista Bellaso loved microwaves?
 Are you missing something? You should search for it better! It's hidden, but not really.
@@ -276,7 +287,9 @@ The 8th byte of the password is: 0x60
 ```
 
 ### T:
-Solution: This is the worst of them all. You actually have to go to the referenced Twitter feeds, dig into [a random conversation that happened months ago](https://twitter.com/anamma_06/status/1414583864865996803), and derive from there that AES was used with a specific key. Especially for players that enter the competition later than the very first day, this is just beyond stupid. Since the authors keep using their Twitter, the conversation gets buried more and more. To me this is just blatant advertising shoved into your face while trying to get through a challenge that is not even related to the very thing the CTF is based around (in case you forgot: it is a reverse engineering CTF). 0/10 would not solve again.
+Solution: This is the worst of them all. You actually have to go to the referenced Twitter feeds, dig into [a random conversation that happened months ago](https://twitter.com/anamma_06/status/1414583864865996803), and derive from there that AES was used with a specific key.
+
+To me this is just blatant advertising shoved into your face while trying to get through a challenge that is not even related to the very thing the CTF is based around (in case you forgot: it is a reverse engineering CTF).  Especially for players that enter the competition later than the very first day, this is just beyond stupid. Since the authors keep using their Twitter, the conversation gets buried more and more as well.
 
 ```
 It seems you are close to escape... We are preparing the tomatoes to throw at you when you open the door! It is only a joke...
@@ -290,6 +303,8 @@ Woow! It seems you are very very close to get the flag! Be careful when converti
 ```
 
 Also, really? Using previous installments of FLARE-ON for clues? Are we this insecure? It isn't hard to be a bit more creative than that...
+
+0/10 would not solve again.
 
 Anyway...
 

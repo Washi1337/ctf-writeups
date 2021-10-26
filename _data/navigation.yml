@@ -61,23 +61,23 @@
       link: 2021
       items:
         - name: credchecker
-          link: 01
+          link: 1
         - name: known
-          link: 02
+          link: 2
         - name: antioch
-          link: 03
+          link: 3
         - name: myaquaticlife
-          link: 04
+          link: 4
         - name: FLARE Linux VM
-          link: 05
+          link: 5
         - name: PetTheKitty
-          link: 06
+          link: 6
         - name: spel
-          link: 07
+          link: 7
         - name: beelogin
-          link: 08
+          link: 8
         - name: evil
-          link: 09
+          link: 9
         - name: wizardcult
           link: 10
 

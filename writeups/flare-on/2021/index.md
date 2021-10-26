@@ -16,7 +16,7 @@ This directory contains write-ups with my solutions for Flare-On 2021 that was h
 - [5 - FLARE Linux VM](5)
 - [6 - PetTheKitty](6)
 - [7 - spel](7)
-- [8 - beeloign](8)
+- [8 - beelogin](8)
 - [9 - evil](9)
 - [10 - wizardcult](10)
 

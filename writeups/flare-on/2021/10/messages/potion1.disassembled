@@ -1,0 +1,42 @@
+Program(Magic=4919, Input=InputDevice(Name=b''), Output=OutputDevice(Name=b''), Cpus=[Cpu(Acc=0, Dat=0, Pc=0, Cond=0, Instructions=[Instruction(Opcode=1, A0=0, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=5, A0=4, A1=-1, A2=0, Bm=1, Cond=0), Instruction(Opcode=1, A0=-1, A1=1, A2=0, Bm=2, Cond=1), Instruction(Opcode=1, A0=0, A1=4, A2=0, Bm=3, Cond=1), Instruction(Opcode=1, A0=4, A1=2, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=2, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=4, A1=1, A2=0, Bm=3, Cond=0)]), Cpu(Acc=0, Dat=0, Pc=0, Cond=0, Instructions=[Instruction(Opcode=1, A0=0, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=18, A0=162, A1=0, A2=0, Bm=0, Cond=0), Instruction(Opcode=1, A0=4, A1=0, A2=0, Bm=3, Cond=0)])], ROMs=[], RAMs=[], Links=[Link(LHDevice=0, LHReg=0, RHDevice=2, RHReg=0), Link(LHDevice=2, LHReg=1, RHDevice=1, RHReg=0), Link(LHDevice=2, LHReg=2, RHDevice=3, RHReg=0)])
+
+RAMs
+
+ROMS
+
+LINKS
+0 Link(LHDevice=0, LHReg=0, RHDevice=2, RHReg=0)
+1 Link(LHDevice=2, LHReg=1, RHDevice=1, RHReg=0)
+2 Link(LHDevice=2, LHReg=2, RHDevice=3, RHReg=0)
+
+CPUS
+cpu0:
+    disassembly:
+        mov     0     4     0        3  0
+        teq     4    -1     0        1  0
+        mov    -1     1     0        2  1
+        mov     0     4     0        3  1
+        mov     4     2     0        3  0
+        mov     2     4     0        3  0
+        mov     4     1     0        3  0
+
+    transpiled:
+        acc = reg0
+        c = acc == -1
+        if c == 1 then stdout.reg0 = -1
+        if c == 1 then acc = reg0
+        cpu1.reg0 = acc
+        acc = cpu1.reg0
+        stdout.reg0 = acc
+
+cpu1:
+    disassembly:
+        mov     0     4     0        3  0
+        xor   162     0     0        0  0
+        mov     4     0     0        3  0
+
+    transpiled:
+        acc = reg0
+        acc ^= 162
+        reg0 = acc
+

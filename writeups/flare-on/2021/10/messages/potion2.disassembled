@@ -1,0 +1,157 @@
+Program(Magic=4919, Input=InputDevice(Name=b''), Output=OutputDevice(Name=b''), Cpus=[Cpu(Acc=0, Dat=0, Pc=0, Cond=0, Instructions=[Instruction(Opcode=1, A0=0, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=5, A0=4, A1=-1, A2=0, Bm=1, Cond=0), Instruction(Opcode=1, A0=-1, A1=1, A2=0, Bm=2, Cond=1), Instruction(Opcode=1, A0=0, A1=4, A2=0, Bm=3, Cond=1), Instruction(Opcode=1, A0=4, A1=2, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=2, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=4, A1=1, A2=0, Bm=3, Cond=0)]), Cpu(Acc=0, Dat=0, Pc=0, Cond=0, Instructions=[Instruction(Opcode=1, A0=0, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=4, A1=1, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=1, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=4, A1=2, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=2, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=4, A1=1, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=1, A1=5, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=128, A1=4, A2=0, Bm=2, Cond=0), Instruction(Opcode=16, A0=5, A1=0, A2=0, Bm=1, Cond=0), Instruction(Opcode=5, A0=4, A1=128, A2=0, Bm=1, Cond=0), Instruction(Opcode=1, A0=5, A1=4, A2=0, Bm=3, Cond=1), Instruction(Opcode=18, A0=66, A1=0, A2=0, Bm=0, Cond=1), Instruction(Opcode=1, A0=5, A1=4, A2=0, Bm=3, Cond=-1), Instruction(Opcode=13, A0=1337, A1=0, A2=0, Bm=0, Cond=0), Instruction(Opcode=16, A0=255, A1=0, A2=0, Bm=0, Cond=0), Instruction(Opcode=1, A0=4, A1=0, A2=0, Bm=3, Cond=0)]), Cpu(Acc=0, Dat=0, Pc=0, Cond=0, Instructions=[Instruction(Opcode=1, A0=0, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=6, A0=4, A1=99, A2=0, Bm=1, Cond=0), Instruction(Opcode=1, A0=4, A1=3, A2=0, Bm=3, Cond=1), Instruction(Opcode=1, A0=3, A1=0, A2=0, Bm=3, Cond=1), Instruction(Opcode=1, A0=4, A1=1, A2=0, Bm=3, Cond=-1), Instruction(Opcode=1, A0=2, A1=0, A2=0, Bm=3, Cond=-1)]), Cpu(Acc=0, Dat=0, Pc=0, Cond=0, Instructions=[Instruction(Opcode=1, A0=0, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=6, A0=4, A1=199, A2=0, Bm=1, Cond=0), Instruction(Opcode=1, A0=4, A1=3, A2=0, Bm=3, Cond=1), Instruction(Opcode=1, A0=3, A1=0, A2=0, Bm=3, Cond=1), Instruction(Opcode=10, A0=100, A1=0, A2=0, Bm=0, Cond=-1), Instruction(Opcode=1, A0=4, A1=1, A2=0, Bm=3, Cond=-1), Instruction(Opcode=1, A0=2, A1=0, A2=0, Bm=3, Cond=-1)]), Cpu(Acc=0, Dat=0, Pc=0, Cond=0, Instructions=[Instruction(Opcode=1, A0=0, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=10, A0=200, A1=0, A2=0, Bm=0, Cond=0), Instruction(Opcode=1, A0=4, A1=1, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=2, A1=0, A2=0, Bm=3, Cond=0)]), Cpu(Acc=0, Dat=0, Pc=0, Cond=0, Instructions=[Instruction(Opcode=1, A0=1, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=16, A0=1, A1=0, A2=0, Bm=0, Cond=0), Instruction(Opcode=5, A0=4, A1=1, A2=0, Bm=1, Cond=0), Instruction(Opcode=1, A0=0, A1=5, A2=0, Bm=3, Cond=0), Instruction(Opcode=1, A0=2, A1=4, A2=0, Bm=3, Cond=0), Instruction(Opcode=13, A0=1337, A1=0, A2=0, Bm=0, Cond=1), Instruction(Opcode=16, A0=255, A1=0, A2=0, Bm=0, Cond=1), Instruction(Opcode=18, A0=5, A1=0, A2=0, Bm=1, Cond=0), Instruction(Opcode=1, A0=4, A1=0, A2=0, Bm=3, Cond=0)])], ROMs=[ROM(A0=0, A1=0, Data=[90, 132, 6, 69, 174, 203, 232, 243, 87, 254, 166, 61, 94, 65, 8, 208, 51, 34, 33, 129, 32, 221, 0, 160, 35, 175, 113, 4, 139, 245, 24, 29, 225, 15, 101, 9, 206, 66, 120, 62, 195, 55, 202, 143, 100, 50, 224, 172, 222, 145, 124, 42, 192, 7, 244, 149, 159, 64, 83, 229, 103, 182, 122, 82, 78, 63, 131, 75, 201, 130, 114, 46, 118, 28, 241, 30, 204, 183, 215, 199, 138, 16, 121, 26, 77, 25, 53, 22, 125, 67, 43, 205, 134, 171, 68, 146, 212, 14, 152, 20]), ROM(A0=0, A1=0, Data=[185, 155, 167, 36, 27, 60, 226, 58, 211, 240, 253, 79, 119, 209, 163, 12, 72, 128, 106, 218, 189, 216, 71, 91, 250, 150, 11, 236, 207, 73, 217, 17, 127, 177, 39, 231, 197, 178, 99, 230, 40, 54, 179, 93, 251, 220, 168, 112, 37, 246, 176, 156, 165, 95, 184, 57, 228, 133, 169, 252, 19, 2, 81, 48, 242, 105, 255, 116, 191, 89, 181, 70, 23, 194, 88, 97, 153, 235, 164, 158, 137, 238, 108, 239, 162, 144, 115, 140, 84, 188, 109, 219, 44, 214, 227, 161, 141, 80, 247, 52]), ROM(A0=0, A1=0, Data=[213, 249, 1, 123, 142, 190, 104, 107, 85, 157, 45, 237, 47, 147, 21, 31, 196, 136, 170, 248, 13, 92, 234, 86, 3, 193, 154, 56, 5, 111, 98, 74, 18, 223, 96, 148, 41, 117, 126, 173, 233, 10, 49, 180, 187, 186, 135, 59, 38, 210, 110, 102, 200, 76, 151, 198]), ROM(A0=0, A1=0, Data=[97, 49, 49, 95, 109, 89, 95, 104, 111, 109, 49, 101, 115, 95, 104, 52, 116, 51, 95, 98, 52, 114, 100, 115])], RAMs=[], Links=[Link(LHDevice=0, LHReg=0, RHDevice=2, RHReg=0), Link(LHDevice=2, LHReg=1, RHDevice=1, RHReg=0), Link(LHDevice=2, LHReg=2, RHDevice=3, RHReg=0), Link(LHDevice=3, LHReg=1, RHDevice=4, RHReg=0), Link(LHDevice=3, LHReg=1, RHDevice=4, RHReg=0), Link(LHDevice=3, LHReg=2, RHDevice=7, RHReg=0), Link(LHDevice=4, LHReg=1, RHDevice=8, RHReg=0), Link(LHDevice=4, LHReg=2, RHDevice=8, RHReg=1), Link(LHDevice=4, LHReg=3, RHDevice=5, RHReg=0), Link(LHDevice=5, LHReg=1, RHDevice=9, RHReg=0), Link(LHDevice=5, LHReg=2, RHDevice=9, RHReg=1), Link(LHDevice=5, LHReg=3, RHDevice=6, RHReg=0), Link(LHDevice=6, LHReg=1, RHDevice=10, RHReg=0), Link(LHDevice=6, LHReg=2, RHDevice=10, RHReg=1), Link(LHDevice=7, LHReg=1, RHDevice=11, RHReg=0), Link(LHDevice=7, LHReg=2, RHDevice=11, RHReg=1)])
+
+RAMs
+
+ROMS
+0 ROM(A0=0, A1=0, Data=[90, 132, 6, 69, 174, 203, 232, 243, 87, 254, 166, 61, 94, 65, 8, 208, 51, 34, 33, 129, 32, 221, 0, 160, 35, 175, 113, 4, 139, 245, 24, 29, 225, 15, 101, 9, 206, 66, 120, 62, 195, 55, 202, 143, 100, 50, 224, 172, 222, 145, 124, 42, 192, 7, 244, 149, 159, 64, 83, 229, 103, 182, 122, 82, 78, 63, 131, 75, 201, 130, 114, 46, 118, 28, 241, 30, 204, 183, 215, 199, 138, 16, 121, 26, 77, 25, 53, 22, 125, 67, 43, 205, 134, 171, 68, 146, 212, 14, 152, 20])
+1 ROM(A0=0, A1=0, Data=[185, 155, 167, 36, 27, 60, 226, 58, 211, 240, 253, 79, 119, 209, 163, 12, 72, 128, 106, 218, 189, 216, 71, 91, 250, 150, 11, 236, 207, 73, 217, 17, 127, 177, 39, 231, 197, 178, 99, 230, 40, 54, 179, 93, 251, 220, 168, 112, 37, 246, 176, 156, 165, 95, 184, 57, 228, 133, 169, 252, 19, 2, 81, 48, 242, 105, 255, 116, 191, 89, 181, 70, 23, 194, 88, 97, 153, 235, 164, 158, 137, 238, 108, 239, 162, 144, 115, 140, 84, 188, 109, 219, 44, 214, 227, 161, 141, 80, 247, 52])
+2 ROM(A0=0, A1=0, Data=[213, 249, 1, 123, 142, 190, 104, 107, 85, 157, 45, 237, 47, 147, 21, 31, 196, 136, 170, 248, 13, 92, 234, 86, 3, 193, 154, 56, 5, 111, 98, 74, 18, 223, 96, 148, 41, 117, 126, 173, 233, 10, 49, 180, 187, 186, 135, 59, 38, 210, 110, 102, 200, 76, 151, 198])
+3 ROM(A0=0, A1=0, Data=[97, 49, 49, 95, 109, 89, 95, 104, 111, 109, 49, 101, 115, 95, 104, 52, 116, 51, 95, 98, 52, 114, 100, 115])
+
+LINKS
+0 Link(LHDevice=0, LHReg=0, RHDevice=2, RHReg=0)
+1 Link(LHDevice=2, LHReg=1, RHDevice=1, RHReg=0)
+2 Link(LHDevice=2, LHReg=2, RHDevice=3, RHReg=0)
+3 Link(LHDevice=3, LHReg=1, RHDevice=4, RHReg=0)
+4 Link(LHDevice=3, LHReg=1, RHDevice=4, RHReg=0)
+5 Link(LHDevice=3, LHReg=2, RHDevice=7, RHReg=0)
+6 Link(LHDevice=4, LHReg=1, RHDevice=8, RHReg=0)
+7 Link(LHDevice=4, LHReg=2, RHDevice=8, RHReg=1)
+8 Link(LHDevice=4, LHReg=3, RHDevice=5, RHReg=0)
+9 Link(LHDevice=5, LHReg=1, RHDevice=9, RHReg=0)
+10 Link(LHDevice=5, LHReg=2, RHDevice=9, RHReg=1)
+11 Link(LHDevice=5, LHReg=3, RHDevice=6, RHReg=0)
+12 Link(LHDevice=6, LHReg=1, RHDevice=10, RHReg=0)
+13 Link(LHDevice=6, LHReg=2, RHDevice=10, RHReg=1)
+14 Link(LHDevice=7, LHReg=1, RHDevice=11, RHReg=0)
+15 Link(LHDevice=7, LHReg=2, RHDevice=11, RHReg=1)
+
+CPUS
+cpu0:
+    disassembly:
+        mov     0     4     0        3  0
+        teq     4    -1     0        1  0
+        mov    -1     1     0        2  1
+        mov     0     4     0        3  1
+        mov     4     2     0        3  0
+        mov     2     4     0        3  0
+        mov     4     1     0        3  0
+
+    transpiled:
+        acc = reg0
+        c = acc == -1
+        if c == 1 then stdout.reg0 = -1
+        if c == 1 then acc = reg0
+        cpu1.reg0 = acc
+        acc = cpu1.reg0
+        stdout.reg0 = acc
+
+cpu1:
+    disassembly:
+        mov     0     4     0        3  0
+        mov     4     1     0        3  0
+        mov     1     4     0        3  0
+        mov     4     2     0        3  0
+        mov     2     4     0        3  0
+        mov     4     1     0        3  0
+        mov     1     5     0        3  0
+        mov   128     4     0        2  0
+        and     5     0     0        1  0
+        teq     4   128     0        1  0
+        mov     5     4     0        3  1
+        xor    66     0     0        0  1
+        mov     5     4     0        3 -1
+        not  1337     0     0        0  0
+        and   255     0     0        0  0
+        mov     4     0     0        3  0
+
+    transpiled:
+        acc = reg0
+        cpu2.reg0 = acc
+        acc = cpu2.reg0
+        cpu5.reg0 = acc
+        acc = cpu5.reg0
+        cpu2.reg0 = acc
+        dat = cpu2.reg0
+        acc = 128
+        acc &= dat
+        c = acc == 128
+        if c == 1 then acc = dat
+        if c == 1 then acc ^= 66
+        if c == -1 then acc = dat
+        acc = ~acc
+        acc &= 255
+        reg0 = acc
+
+cpu2:
+    disassembly:
+        mov     0     4     0        3  0
+        tgt     4    99     0        1  0
+        mov     4     3     0        3  1
+        mov     3     0     0        3  1
+        mov     4     1     0        3 -1
+        mov     2     0     0        3 -1
+
+    transpiled:
+        acc = reg0
+        c = acc > 99
+        if c == 1 then cpu3.reg0 = acc
+        if c == 1 then reg0 = cpu3.reg0
+        if c == -1 then rom0.reg0 = acc
+        if c == -1 then reg0 = rom0.reg1
+
+cpu3:
+    disassembly:
+        mov     0     4     0        3  0
+        tgt     4   199     0        1  0
+        mov     4     3     0        3  1
+        mov     3     0     0        3  1
+        sub   100     0     0        0 -1
+        mov     4     1     0        3 -1
+        mov     2     0     0        3 -1
+
+    transpiled:
+        acc = reg0
+        c = acc > 199
+        if c == 1 then cpu4.reg0 = acc
+        if c == 1 then reg0 = cpu4.reg0
+        if c == -1 then acc -= 100
+        if c == -1 then rom1.reg0 = acc
+        if c == -1 then reg0 = rom1.reg1
+
+cpu4:
+    disassembly:
+        mov     0     4     0        3  0
+        sub   200     0     0        0  0
+        mov     4     1     0        3  0
+        mov     2     0     0        3  0
+
+    transpiled:
+        acc = reg0
+        acc -= 200
+        rom2.reg0 = acc
+        reg0 = rom2.reg1
+
+cpu5:
+    disassembly:
+        mov     1     4     0        3  0
+        and     1     0     0        0  0
+        teq     4     1     0        1  0
+        mov     0     5     0        3  0
+        mov     2     4     0        3  0
+        not  1337     0     0        0  1
+        and   255     0     0        0  1
+        xor     5     0     0        1  0
+        mov     4     0     0        3  0
+
+    transpiled:
+        acc = rom3.reg0
+        acc &= 1
+        c = acc == 1
+        dat = reg0
+        acc = rom3.reg1
+        if c == 1 then acc = ~acc
+        if c == 1 then acc &= 255
+        acc ^= dat
+        reg0 = acc
+

@@ -76,7 +76,7 @@ with open("decrypted.bin", "wb") as f:
     f.write(decoded_bytes)
 ```
 
-If we pick a random weird-looking PROPFIND request and feed the data through the script, we get a nice decoded binary file containing x86 shell-code. In the remaining, we are assuming the shell code and its addresses as indicated by [this dump](decrypted.bin), which has an entrypoint at address 0x151.
+If we pick a random weird-looking PROPFIND request and feed the data through the script, we get a nice decoded binary file containing x86 shell-code. In the remaining, we are assuming the shell code and its addresses as indicated by [this dump](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/7/decrypted.bin), which has an entrypoint at address 0x151.
 
 
 ## Let the reversing begin!
@@ -225,7 +225,7 @@ if (exports_ptr != 0) {
 }
 ```
 
-This reveals that our mysterious function is calling exports by a hash code! We can build a mapping of known hash codes to functions, by writing a C# program that takes every single DLL in `C:\Windows\System32`, parses the PE headers, and computes the hash code of every single export that they define. An implementation of such a program can be found [here](HashToFunction.cs). Disclaimer: It uses AsmResolver to do the PE parsing, so it is a bit of self-advertisement :).
+This reveals that our mysterious function is calling exports by a hash code! We can build a mapping of known hash codes to functions, by writing a C# program that takes every single DLL in `C:\Windows\System32`, parses the PE headers, and computes the hash code of every single export that they define. An implementation of such a program can be found [here](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/7/HashToFunction.cs). Disclaimer: It uses AsmResolver to do the PE parsing, so it is a bit of self-advertisement :).
 
 
 ## Making heads and tails of the shell code
@@ -303,7 +303,7 @@ We know the encryption algorithm, let's find the data to decrypt in the packet c
 
 ![Figure 4](wireshark4.png)
 
-A dump of this stream can be found in [encrypted_payload.bin](encrypted_payload.bin). Onto decryption, we write a simple Python script:
+A dump of this stream can be found in [encrypted_payload.bin](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/7/encrypted_payload.bin). Onto decryption, we write a simple Python script:
 
 ```python
 from arc4 import ARC4
@@ -319,7 +319,7 @@ with open("payload.bin", "wb") as f:
     f.write(data)
 ```
 
-A dump can be found in [payload.bin](payload.bin).
+A dump can be found in [payload.bin](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/7/payload.bin).
 
 
 ## Are we there yet?
@@ -392,7 +392,7 @@ Fairly obvious what is happening here, now that we have resolved all imports. We
 
 ## Getting the flag
 
-It so happens this response data is sent in TCP stream 51 of the packet capture. An export of the transmitted data can be found in [encrypted_response.bin](encrypted_response.bin):
+It so happens this response data is sent in TCP stream 51 of the packet capture. An export of the transmitted data can be found in [encrypted_response.bin](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/7/encrypted_response.bin):
 
 ![Figure 6](wireshark5.png)
 

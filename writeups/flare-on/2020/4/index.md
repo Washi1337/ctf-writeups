@@ -134,7 +134,7 @@ with open("stomp.mp3", "wb") as f:
     f.write(result)
 ```
 
-However, it outputs a sound file ([stomp.mp3](stomp.mp3)) with the title "This is not what you should be looking at...", and the audio itself is nothing more than some drums playing a rhythm.
+However, it outputs a sound file ([stomp.mp3](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/4/stomp.mp3)) with the title "This is not what you should be looking at...", and the audio itself is nothing more than some drums playing a rhythm.
 
 ![Figure 4](stomp.png)
 
@@ -185,7 +185,7 @@ $ olevba report.xls
 +----------+--------------------+---------------------------------------------+
 ```
 
-While `olevba` is able to dump the actual P-Code that is run, P-Code is harder to read than normal VBA. Fortunately, there is another tool called [pcode2code](https://github.com/Big5-sec/pcode2code), which is able to decompile it back to normal VBA code. Feeding `report.xls` to pcode2code gives us an output similar to the one provided in [ActualCode.vb](ActualCode.vb).
+While `olevba` is able to dump the actual P-Code that is run, P-Code is harder to read than normal VBA. Fortunately, there is another tool called [pcode2code](https://github.com/Big5-sec/pcode2code), which is able to decompile it back to normal VBA code. Feeding `report.xls` to pcode2code gives us an output similar to the one provided in [https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/4/ActualCode.vb](ActualCode.vb).
 
 The final part of the original main procedure is replaced with the following code:
 

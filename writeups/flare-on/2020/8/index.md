@@ -223,7 +223,7 @@ void MAGIC_FUNCTION(void)
 }
 ```
 
-Seems like we are extracting a resource to some temp file. Setting a breakpoint at the `CreateFileA` and `CloseHandle` function calls, gives us a file that is similar to [embedded.bin](embedded.bin). Feeding the file into the `file` command, tells us something interesting:
+Seems like we are extracting a resource to some temp file. Setting a breakpoint at the `CreateFileA` and `CloseHandle` function calls, gives us a file that is similar to [embedded.bin](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/8/embedded.bin). Feeding the file into the `file` command, tells us something interesting:
 ```bash
 $ file embedded.bin
 embedded.bin: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=e26dfd1a32bf2fc2f804ede74b1b9ef9c73268bf, stripped

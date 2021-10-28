@@ -407,7 +407,7 @@ loop:
     jmp loop
 ```
 
-This is how to run it (copies of the files can be found [here](gadgets)).
+This is how to run it (copies of the files can be found [here](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/10/gadgets)).
 ```sh
 $ nasm call_puts.asm -o call_puts.bin
 $ python patch.py break 08048eb3 call_puts.bin
@@ -455,7 +455,7 @@ undefined4 actual_serial_verification_2(void *param_1)
 
 More weird calls to system functions;  a call to `nice` again, then a call to `truncate` with not very typical arguments and return values. What's going on here?
 
-Ignoring this again for now, we can see `local_1c` being used in a loop a lot, which seems to do some decryption. Our next gadget is [printeax.asm](printeax.asm), which as its name implies, prints the value of the EAX register:
+Ignoring this again for now, we can see `local_1c` being used in a loop a lot, which seems to do some decryption. Our next gadget is [printeax.asm](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/10/gadgets/printeax.asm), which as its name implies, prints the value of the EAX register:
 
 ```
 [BITS 32]
@@ -760,7 +760,7 @@ print(cipher_text)
 4nD_0f_De4th_4nd_d3strUct1oN_4nd
 ```
 
-It also allows us to fully decrypt the large buffer of 40000 bytes. Apparently, it contains part of the Bee movie script :D (a copy can be found [here](decrypted.bin)):
+It also allows us to fully decrypt the large buffer of 40000 bytes. Apparently, it contains part of the Bee movie script :D (a copy can be found [here](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/10/decrypted.bin)):
 
 ![Bee Movie](beemovie.png)
 

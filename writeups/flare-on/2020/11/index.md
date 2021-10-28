@@ -109,7 +109,7 @@ if($yhibbqw=$ywqphsrw::VirtualAllocEx($ywqphsrw::GetCurrentProcess(),0,$rpl.Leng
 }
 ```
 
-This is a common code injection trick that injects [code](artifacts/timerpro.d.decoded.bin) in the current process (Powershell), and runs it using `QueueUserAPC`. This is starting to look very suspicious. To put the nails in the coffin, I decided to check in the registry for any references to this Timerpro to be absolutely sure this was the malware that was ran on the computer. We find this key in one of the startup scripts of the user:
+This is a common code injection trick that injects [code](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/11/artifacts/timerpro.d.decoded.bin) in the current process (Powershell), and runs it using `QueueUserAPC`. This is starting to look very suspicious. To put the nails in the coffin, I decided to check in the registry for any references to this Timerpro to be absolutely sure this was the malware that was ran on the computer. We find this key in one of the startup scripts of the user:
 
 ![Forfiles.exe](regexp5.png)
 
@@ -159,7 +159,7 @@ undefined8 FUN_000099fc(ulonglong param_1)
 }
 ```
 
-After obtaining the entrypoint address and fixing up the headers to make it a somewhat normal looking PE (a copy of the new file can be found [here](artifacts/timerpro.d.fixedheaders.bin)) we can finally start analysing the malware in Ghidra.
+After obtaining the entrypoint address and fixing up the headers to make it a somewhat normal looking PE (a copy of the new file can be found [here](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/11/artifacts/timerpro.d.fixedheaders.bin)) we can finally start analysing the malware in Ghidra.
 
 
 ## Analysing the payload
@@ -436,7 +436,7 @@ After that, we can set a second breakpoint on the actual decryption routine, and
 
 ![Decrypting the main module](decrypting.gif)
 
-Copies of all decrypted modules can be found in [this folder](artifacts/modules).
+Copies of all decrypted modules can be found in [this folder](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/11/artifacts/modules).
 
 If we have a look at the first module it decrypts with string index `8576B0D0` (which decoded to `WebsoftwareProcesstemplate`), we see what seems to be a weird custom file format:
 
@@ -579,7 +579,7 @@ void XorDecryptBuffer(uint *ptr,uint count,uint key,int skip_zero)
 }
 ```
 
-Writing [a quick script in Python](scripts/decrypt_bss.py) that reimplements this function helps us decrypting all bss sections of every module. Copies of them can be found in [the artifacts directory](artifacts/modules).
+Writing [a quick script in Python](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/11/scripts/decrypt_bss.py) that reimplements this function helps us decrypting all bss sections of every module. Copies of them can be found in [the artifacts directory](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/11/artifacts/modules).
 
 ![Decrypted BSS sections](hxd3.png)
 
@@ -675,7 +675,7 @@ void FUN_180003880(undefined8 param_1,undefined4 *param_2)
 }
 ```
 
-Great, we now know that MAIN is updated every time a HTTP request is made to the C2 server! What about `DiMap` though? There is no trace of `DiMap` anywhere in any of the decrypted BSS sections, nor is it hardcoded as a string in the executable itself either. However, it does look like one of those random strings generated from that long word list. Let's find out which string index belongs to `DiMap` with [yet another Python script](script/find_dimap.py) by plain and simple bruteforce:
+Great, we now know that MAIN is updated every time a HTTP request is made to the C2 server! What about `DiMap` though? There is no trace of `DiMap` anywhere in any of the decrypted BSS sections, nor is it hardcoded as a string in the executable itself either. However, it does look like one of those random strings generated from that long word list. Let's find out which string index belongs to `DiMap` with [yet another Python script](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/11/script/find_dimap.py) by plain and simple bruteforce:
 
 ```python
 from string_decrypter import *
@@ -755,7 +755,7 @@ $ python string_decrypter.py d722afcb 5
 MonitornewWarningmap
 ```
 
-In [the decrypted contents](artifacts/baseconfig.bin) (obtained in a similar way we found the decryptions of the modules), we see the host name of the C2 server, and the encryption key:
+In [the decrypted contents](https://github.com/Washi1337/ctf-writeups/blob/master/writeups/flare-on/2020/11/artifacts/baseconfig.bin) (obtained in a similar way we found the decryptions of the modules), we see the host name of the C2 server, and the encryption key:
 
 ![Base configuration](hxd5.png)
 

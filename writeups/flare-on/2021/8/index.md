@@ -9,7 +9,7 @@ layout: default
 
 **Tools used:** Firefox, VSCode with JS Debugger Extension, Python, de4js
 
-Challenge 8 felt a bit underrated in my opinion, but this might be because I have some experience with cryptography and code deobfuscation. In this challenge, you are given a large HTML file, together with the following note:
+Challenge 8 felt a bit overrated in my opinion, but this might be because I have some experience with cryptography and code deobfuscation. In this challenge, you are given a large HTML file, together with the following note:
 
 ```
 You're nearly done champ, just a few more to go. we put all the hard ones at the 

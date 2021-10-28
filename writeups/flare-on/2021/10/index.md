@@ -188,7 +188,7 @@ We can do this for all tables in the binary, and build up a look up table ([word
 
 ![Decoded potion 1](img/screenshot5.png)
 
-All decoded messages can be found [here](https://github.com/Washi1337/ctf-writeups/writeups/flare-on/2021/10/messages/).
+All decoded messages can be found [here](https://github.com/Washi1337/ctf-writeups/tree/master/writeups/flare-on/2021/10/messages/).
 
 
 ## Finding the meaning behind the potions

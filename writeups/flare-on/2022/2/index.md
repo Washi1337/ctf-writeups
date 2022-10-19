@@ -24,13 +24,19 @@ If we run the program, we are presented with a large, seemingly randomly generat
 
 ![](img/pixelpoker01.png)
 
-The name of the challenge suggests that we should be finding the right pixel to click.
-Clicking a couple of times at random on the image will bring up a popup window with the text `"Womp womp... :("`.
+Clicking a couple of times on the canvas at random will eventually bring up a popup window with the text `"Womp womp... :("`.
+The program terminates afterwards.
 
 ![](img/pixelpoker02.png)
 
-We can find this string in Ghidra, check its cross-references, and find that it is used in a `MessageBoxA` call inside of a `WndProc`-like function `FUN_004012c0`.
-After renaming, retyping and cleaning up some of the code, it looks a bit like the following:
+The name of the challenge suggests that we should be finding the right pixel to click, probably within a limited number of attempts.
+
+
+## Analyzing the Code
+
+We can find out the code responsible for our bad-boy message by opening the program in a decompiler such as Ghidra.
+If you cross reference on this string, you will find that it is used in a `MessageBoxA` call inside of a `WndProc`-like function `FUN_004012c0`.
+After renaming, retyping and cleaning up some of the decompiled code, this function looks a bit like the following:
 
 ```c
 LRESULT FUN_004012c0(HWND hWnd,uint message,uint wParam,LPARAM lParam)
@@ -90,6 +96,8 @@ LRESULT FUN_004012c0(HWND hWnd,uint message,uint wParam,LPARAM lParam)
 When the message loop receives a `WM_LBUTTONDOWN` message, we see that the program increases a global variable (`ATTEMPTS`), followed by some check on the coordinates of the clicked pixel.
 If these conditions are met, then the program seems to enter some kind of loop that repeatedly calls _some_ function that calls `GetPixel` and `SetPixel`, presumably changing some pixels on the canvas.
 After 10 times increasing the global variable, it gets to our `MessageBoxA` call we saw earlier and then destroys the window.
+
+## Getting the flag
 
 When I see a construction like this, I have no real intention of actually trying to understand how exactly this `function_that_sets_pixel` function works, nor do I care about the exact conditions that are required to enter this loop.
 All I want to do is get the program to enter the loop and just do its thing, and the easiest way of achieving this to me is by simply patching the program.

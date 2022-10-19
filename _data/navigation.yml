@@ -81,6 +81,32 @@
         - name: wizardcult
           link: 10
 
+    - name: 2022
+      link: 2022
+      items:
+        - name: Flaredle
+          link: 1
+        - name: Pixel Poker
+          link: 2
+        - name: Magic 8 Ball
+          link: 3
+        - name: darn_mice
+          link: 4
+        - name: T8
+          link: 5
+        - name: à la mode
+          link: 6
+        - name: anode
+          link: 7
+        - name: backdoor
+          link: 8
+        - name: encryptor
+          link: 9
+        - name: Nur geträumt
+          link: 10
+        - name: The challenge that shall not be named
+          link: 11
+
 - name: Miscellaneous
   link: /writeups/misc
   items:

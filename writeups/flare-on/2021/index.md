@@ -21,7 +21,7 @@ This directory contains write-ups with my solutions for Flare-On 2021 that was h
 - [10 - wizardcult](10)
 
 ## Binaries
-Download the binaries [here](http://flare-on.com/files/Flare-On7_Challenges.zip).
+Download the binaries [here](http://flare-on.com/files/Flare-On8_Challenges.zip).
 
 
 ## Bragging rights

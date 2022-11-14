@@ -22,7 +22,7 @@ This directory contains write-ups with my solutions for Flare-On 2022 that was h
 - [11 - The challenge that shall not be named.](11)
 
 ## Binaries
-Download the binaries [here](http://flare-on.com/files/Flare-On7_Challenges.zip).
+Download the binaries [here](http://flare-on.com/files/Flare-On9_Challenges.zip).
 
 
 ## Bragging rights

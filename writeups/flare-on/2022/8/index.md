@@ -7,7 +7,7 @@ layout: default
 
 **Time spent:** 6 hours
 
-**Tools used:** Ghidra, Python
+**Tools used:** dnSpy, Python
 
 
 Challenge 8 was for me by far the best challenge in the entire series. 

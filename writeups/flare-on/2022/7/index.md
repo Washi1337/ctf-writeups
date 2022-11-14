@@ -356,7 +356,7 @@ import generated
 
 This outputs:
 ```console
-$ out python solve.py
+$ python solve.py
 b'n0t_ju5t_A_j4vaSCriP7_ch4l1eng3@flare-on.com'
 ```
 

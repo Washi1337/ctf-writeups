@@ -5,7 +5,7 @@ layout: default
 
 # Flare-On 2022
 
-This directory contains write-ups with my solutions for Flare-On 2022 that was hosted by FireEye from September 30 to November 11 2022. 
+This directory contains write-ups with my solutions for Flare-On 2022 that was hosted by Mandiant from September 30 to November 11 2022. 
 
 ## Table of Contents
 

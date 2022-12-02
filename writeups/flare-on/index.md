@@ -5,4 +5,4 @@ layout: default
 
 # Flare-On
 
-This directory contains write ups for the anual flare-on CTF hosted by FireEye.
+This directory contains write ups for the annual flare-on CTF hosted by Mandiant and formerly by FireEye.

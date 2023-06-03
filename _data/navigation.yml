@@ -106,7 +106,14 @@
           link: 10
         - name: The challenge that shall not be named
           link: 11
-
+- name: DEFCON
+  link: /writeups/defcon
+  items:
+    - name: 2023
+      link: 2023
+      items:
+        - name: brinebid
+          link: brinebid
 - name: Miscellaneous
   link: /writeups/misc
   items:

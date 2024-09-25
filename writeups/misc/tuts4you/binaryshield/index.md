@@ -119,7 +119,7 @@ In any case, here are some downloads:
 
 The disassembled bytecode starts with a long series of `pop` instructions, it looks like registers are being initialized by values pushed onto the stack before the VM code itself was called:
 
-```
+```c
 L1678f: pop64 r0
 L16794: pop64 r1
 L16799: pop64 r2
@@ -149,7 +149,7 @@ This is crucial information for understanding the virtualized code.
 
 After the series of pop instructions and with the help of this register mapping, we can now see that the next few instructions look very much akin to a normal x86 function prologue:
 
-```asm
+```c
 // push bp
 L167e4: push64 r7   
 
@@ -171,7 +171,7 @@ Interestingly enough, binary opcodes such as the `sub64` instruction expectedly 
 What follows can essentially be translated to a long series of assignments with seemingly garbage/obfuscated arithmetic code. 
 For example, the first compiled "assignment" looks like the following:
 
-```
+```c
 L1680f: push64 r7           // r16 = bp+(0+0x10)
 L16814: push64 0x0          
 L16820: push64 0x10
@@ -193,7 +193,7 @@ bp[0x10] = r3; // r3 == input key
 
 Another one at offset `L168F0` we see a slightly more interesting one, which combines a negative variable offset (i.e., temporary scratch stack variable, similar as in x86) with an arithmetic operation `and32`:
 
-```
+```c
 L168f0: push64 r7                   // r16 = bp + (0 + -0x8)
 L168f5: push64 0x0
 L16901: push64 0xfffffffffffffff8
@@ -221,7 +221,7 @@ bp[-0x8] = bp[-0x8] & 0x23;
 
 You can continue this to get a very long list of assignments, until you get to `L16d13`, which uses the `sub32` to set the x86 flags. The flags are then used in a comparison.
 
-```
+```c
 L16d13: push64 r7           // push bp[0x10]
 L16d18: push64 0x0
 L16d24: push64 0x10
@@ -254,7 +254,7 @@ This way, the VM realizes control-flow, which can be used to build if-statements
 - [disassembly_annotated.asm](dumps/disassembly_annotated.asm): Fully annotated code.
 
 
-## Fully Devirtualized code and Solving the Crackme
+## Fully Devirtualized Code and Solving the Crackme
 
 We can now get rid of all the raw VM code disassembly, and do some simple find+replace to obtain the following code implementing a very basic key verification code (full unstripped source in [devirtualized.c](https://github.com/Washi1337/ctf-writeups/tree/master/writeups/misc/tuts4you/binaryshield/src/devirtualized.c)):
 

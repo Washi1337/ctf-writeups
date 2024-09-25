@@ -13,7 +13,7 @@ layout: default
 
 **Tools used:** dnSpy, ILSpy, JetBrains Rider
 
-On Februari 1, a user by the name LoLLo90 posted a crackme challenge that has custom a virtual machine in it. It came with the following description:
+On Februari 1, 2021, a user by the name LoLLo90 posted a crackme challenge that has custom a virtual machine in it. It came with the following description:
 
 ```
 This is my clumsy virtual machine 😃

@@ -120,5 +120,7 @@
     - name: tuts4you
       link: tuts4you
       items:
+        - name: BinaryShield
+          link: binaryshield
         - name: ClumsyVM
           link: clumsyvm

@@ -106,6 +106,22 @@
           link: 10
         - name: The challenge that shall not be named
           link: 11
+
+    - name: 2024
+      link: 2024
+      items:
+        - name: frog
+          link: 1
+        - name: checksum
+          link: 2
+        - name: aray
+          link: 3
+        - name: FLARE Meme Maker 3000
+          link: 4
+        - name: sshd
+          link: 5
+        - name: bloke2
+          link: 6
 - name: DEFCON
   link: /writeups/defcon
   items:

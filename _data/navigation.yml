@@ -122,6 +122,8 @@
           link: 5
         - name: bloke2
           link: 6
+        - name: fullspeed
+          link: 7
 - name: DEFCON
   link: /writeups/defcon
   items:

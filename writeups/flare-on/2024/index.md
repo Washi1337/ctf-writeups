@@ -15,7 +15,7 @@ This directory contains write-ups with my solutions for Flare-On 2024 that was h
 - [4 - FLARE Meme Maker 3000](4)
 - [5 - sshd](5)
 - [6 - bloke2](6)
-- [7 - ](7)
+- [7 - fullspeed](7)
 - [8 - ](8)
 - [9 - ](9)
 - [10 - ](10)

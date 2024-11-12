@@ -7,7 +7,7 @@ layout: default
 
 **Time spent:** ~3 hours
 
-**Tools used:** Verilog and a lot of Random Luck
+**Tools used:** Verilog and a lot of Random Luck&#8482;
 
 Challenge 6 is the obligatory "weird-architecture" challenge that FLARE-ON typically does at least one of every year.
 You are presented with a folder full of verilog source code files.
@@ -113,7 +113,11 @@ The challenge has an interesting idea but the execution seemed poor.
 
 I spent a good amount of time learning Verilog, getting stuck with  "what are the differences between this and normal BLAKE2" and "how am I supposed to find an input for which the hash is a flag?".
 But in the end, none of that mattered: All you needed was guess that one of the **sample inputs** was actually producing the flag when flipping one bit.
-This trick didn't work at first, as I had changed the test inputs to something else. This made me waste a LOT of time too...
+As far as I can tell, there is basically zero indication that one of the test inputs should've been used.
+This set me back several HOURS of time, as I had changed the test inputs to something else.
+Not until redownloading the challenge again, in fear I had broken something while debugging and tracing everything, the flag apparead out of the blue.
+
+... Just why?
 
 In any case, this challenge made me feel like I wasted a lot of time learning things I didn't need.
 I am kind of curious whether this was the intended solution.

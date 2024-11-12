@@ -124,6 +124,8 @@
           link: 6
         - name: fullspeed
           link: 7
+        - name: clearlyfake
+          link: 8
 - name: DEFCON
   link: /writeups/defcon
   items:

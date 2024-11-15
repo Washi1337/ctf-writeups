@@ -17,7 +17,7 @@ This directory contains write-ups with my solutions for Flare-On 2024 that was h
 - [6 - bloke2](6)
 - [7 - fullspeed](7)
 - [8 - clearlyfake](8)
-- [9 - ](9)
+- [9 - serpentine](9)
 - [10 - ](10)
 
 ## Binaries

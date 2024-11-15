@@ -126,6 +126,8 @@
           link: 7
         - name: clearlyfake
           link: 8
+        - name: serpentine
+          link: 9
 - name: DEFCON
   link: /writeups/defcon
   items:

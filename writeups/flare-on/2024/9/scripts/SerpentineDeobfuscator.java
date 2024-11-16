@@ -116,20 +116,22 @@ public class SerpentineDeobfuscator extends GhidraScript {
         var emulator = new EmulatorHelper(currentProgram);
         emulator.writeRegister("RIP", address.getOffset());
 
-        // step into handler
+        // step into instruction decrypter
         emulator.step(monitor);
-        var handlerAddress = emulator.getExecutionAddress();
-        if ((getByte(handlerAddress) & 0xFF) != 0x8F) {
+        var decrypterAddress = emulator.getExecutionAddress();
+
+        // Not strictly required, but sanity check: all decrypters start with a POP instruction.
+        if ((getByte(decrypterAddress) & 0xFF) != 0x8F) {
             println("No pop found at handler for " + address);
             return null;
         }
 
-        // emulate instructions responsible for decryption.
+        // Emulate instructions responsible for decryption.
         for (int i = 0; i < 7; i++) {
             emulator.step(monitor);
         }
 
-        // Decode new instruction
+        // Clear and force re-decoding of next instruction.
         var startAddress = emulator.getExecutionAddress();
 
         byte[] newCode = emulator.readMemory(startAddress, 50);
@@ -144,8 +146,8 @@ public class SerpentineDeobfuscator extends GhidraScript {
         println(call.getAddress() + " : " + call + " -> " + instruction);
 
         // Delete decoder function and clear code (Helps preventing ghidra's auto analysis do weird stuff).
-        listing.clearCodeUnits(handlerAddress, endAddress.add(10), true);
-        currentProgram.getFunctionManager().removeFunction(handlerAddress);
+        listing.clearCodeUnits(decrypterAddress, endAddress.add(10), true);
+        currentProgram.getFunctionManager().removeFunction(decrypterAddress);
 
         // Decide what to do with the instruction.
         if (!instruction.toString().startsWith("JMP")) {

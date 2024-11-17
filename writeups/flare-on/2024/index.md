@@ -18,7 +18,7 @@ This directory contains write-ups with my solutions for Flare-On 2024 that was h
 - [7 - fullspeed](7)
 - [8 - clearlyfake](8)
 - [9 - serpentine](9)
-- [10 - ](10)
+- [10 - Catbert Ransomware](10)
 
 ## Binaries
 Download the binaries [here](http://flare-on.com/files/Flare-On11_Challenges.zip).

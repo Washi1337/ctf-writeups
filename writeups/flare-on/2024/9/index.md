@@ -7,7 +7,7 @@ layout: default
 
 **Time spent:** 4 days
 
-**Tools used:** Ghidra - x64dbg - C - Python - z3
+**Tools used:** Ghidra, x64dbg, C, Python, Z3
 
 Challenge 9 is arguably the most difficult challenge of this year, and this was reflected in the scoreboard.
 Most people, if they got far into the series, got really stuck on 9.

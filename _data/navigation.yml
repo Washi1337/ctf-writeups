@@ -130,6 +130,28 @@
           link: 9
         - name: Catbert Ransomware
           link: 10
+
+    - name: 2025
+      link: 2025
+      items:
+        - name: Drill Baby Drill!
+          link: 1
+        - name: project_chimera
+          link: 2
+        - name: pretty_devilish_file
+          link: 3
+        - name: UnholyDragon
+          link: 4
+        - name: ntfsm
+          link: 5
+        - name: Chain of Demands
+          link: 6
+        - name: The Boss Needs Help
+          link: 7
+        - name: FlareAuthenticator
+          link: 8
+        - name: 10000
+          link: 9
 - name: DEFCON
   link: /writeups/defcon
   items:

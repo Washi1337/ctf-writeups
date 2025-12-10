@@ -87,7 +87,7 @@ Puzzl1ng-D3vilish-F0rmat@flare-on.com
 
 ## Final Words
 
-I don't like these challenegs.
+I don't like these challenges.
 It's pure luck that I found the right PDF reader and the right steganography decoding.
 I wasted a good amount of time just guessing what the author wants rather than actually reversing something and testing your skills.
 

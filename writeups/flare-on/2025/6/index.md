@@ -39,7 +39,7 @@ In particular, the code is nicely separated into classes with very descriptive n
 
 ![](img/04.png)
 
-Two of these classes, `LCGOracle` and `TripleXOROracle` are extra interesting, because they seem to be deploying some hardcoded EVM bytecode onto a ethereum-based blockchain.
+Two of these classes, `LCGOracle` and `TripleXOROracle`, are extra interesting, because they seem to be deploying some hardcoded EVM bytecode onto a ethereum-based blockchain.
 
 ![](img/05.png)
 
@@ -48,27 +48,25 @@ Lucky for us, the names of the two contracts already give us a very big hint on 
 - **LCG** sounds like a [Linear Congruential Generator](https://en.wikipedia.org/wiki/Linear_congruential_generator), and
 - **TripleXOR** kind of speaks for itself; it likely XORs three numbers together.
 
-Therefore, instead of analyzing the code, I decided to deploy the contracts on a testnet and just fire it with some example inputs to see if they give m the expected results.
-And indeed, with a bit of trial and error of the inputs you can figure out that the contracts really don't implement anything other than what we guessed.
-
-I decided to implement a local version of both the `LCGOracle::get_next` and `TripleXOROracle::encrypt` functions. This allows us to do all kinds of things without having to redeploy to a testnet (or do anything with web-3 anymore for that matter):
+Therefore, instead of analyzing the code, I decided to deploy the contracts on a testnet and just fire it with some example inputs to see if they give me the expected results.
+And indeed, with a bit of trial and error of the inputs you can figure out that the contracts really don't implement anything other than the code below:
 
 ```python
 class LCGOracle:
     # ... (snip) ...
 
-    def get_next_local(self, counter):    
+    def get_next_local(self, counter):
         x = self.state
         for i in range(counter):
             x = (self.multiplier * self.state + self.increment) % self.modulus
-    
+
         return x
-        
-        
+
+
 class TripleXOROracle:
     # ... (snip) ...
 
-    def encrypt_local(self, prime_from_lcg : int, conversation_time: int , plaintext_bytes: str):        
+    def encrypt_local(self, prime_from_lcg : int, conversation_time: int , plaintext_bytes: str):
         pt = bytearray(plaintext_bytes.encode('utf-8'))
 
         # poor-man's version of a zero-pad :-)
@@ -81,7 +79,9 @@ class TripleXOROracle:
         return ciphertext
 ```
 
-How do they tie into all of this?
+The nice thing about having fully local versions of the same functions is that we can use them however we want without needing any connection to some ethereum blockchain, and we can easily debug things as we go.
+
+So how do these two oracles tie into all of this?
 
 
 ## Breaking the Cryptography
@@ -93,7 +93,7 @@ It first checks whether we are in "super safe mode" (which can be enabled using 
 
 ![](img/06.png)
 
-Assuming that the messages that were sent under "super safe mode" contains the flag, we should figure out how to recover the parameters of the RSA scheme that was used.
+Assuming that the messages that were sent under "super safe mode" contain the flag, we should figure out how to recover the parameters of the RSA scheme that was used.
 
 Luckily, there is a function conveniently called `generate_rsa_key_from_lcg`, which generates the primes using an LCG with the same initial parameters as the non-super safe mode XOR cipher uses.
 
@@ -102,13 +102,13 @@ Luckily, there is a function conveniently called `generate_rsa_key_from_lcg`, wh
         print('[RSA] Generating RSA key from on-chain LCG primes...')
         lcg_for_rsa = LCGOracle(self.lcg_oracle.multiplier, self.lcg_oracle.increment, self.lcg_oracle.modulus, self.seed_hash)
         lcg_for_rsa.deploy_lcg_contract()
-        
+
         # ... (prime generation...)
 ```
 
 This means, if we can figure out the LCG parameters, we can figure out the RSA parameters as well.
-To do this, we are going to exploit a pretty well-known fact about LCGs, and that is that they are PRNGs that are not that strong.
-In particular, given a sufficiently large sub-sequence of an output of the LCG, is it actually possible to calculate the initial parameters that were used to generate the sequence.
+To do this, we are going to exploit a pretty well-known fact about LCGs: They are PRNGs that are not very strong.
+In particular, given a sufficiently large sub-sequence of an output of the LCG, is it [possible to calculate the initial parameters](https://security.stackexchange.com/questions/4268/cracking-a-linear-congruential-generator) that were used to generate the sequence.
 
 To recover the LCG sequence, we can refer to the messages that were sent prior to the enabling the super safe mode, and just revert the XOR operations:
 
@@ -120,14 +120,14 @@ def recover_prime(message):
     ciphertext = int.from_bytes(bytes.fromhex(message['ciphertext']), 'big')
     conversation_time = message["conversation_time"]
     return conversation_time ^ int.from_bytes(plaintext, 'big') ^ ciphertext
-    
+
 with open("chat_log-orig.json", "rb") as f:
     messages = json.load(f)
 
 lcg_sequence = []
 for i, message in enumerate(messages):
     if message['mode'] == "LCG-XOR":
-        prime = recover_prime(message)        
+        prime = recover_prime(message)
         print(f"recovered prime_for_lcg {i}: {prime}")
         lcg_sequence.append(prime)
 ```
@@ -144,7 +144,7 @@ recovered prime_for_lcg 6: 20017674779830364175685710279350076931283727675441675
 ```
 
 Now it is just a matter of calculating the original LCG parameters.
-I used [this sage script](https://github.com/jvdsn/crypto-attacks/blob/master/attacks/lcg/parameter_recovery.py) made by Joachim Vandersmissen to do it for me:
+I used [this sage script](https://github.com/jvdsn/crypto-attacks/blob/master/attacks/lcg/parameter_recovery.py) made by Joachim Vandersmissen to do the attack for me:
 
 ```python
 lcg_sequence = [ ... ]
@@ -162,7 +162,7 @@ c: 61077733451871028544335625522563534065222147972493076369037987394712960199707
 
 Now it is a matter of just copying the RSA prime-generation setup from the original code:
 
-```python 
+```python
 lcg_for_rsa = LCGOracle(a, c, m, lcg_sequence[0])
 primes_arr = []
 rsa_msg_count = 0
@@ -181,12 +181,12 @@ print("RSA primes:", primes_arr)
 
 And setting up the RSA parameters:
 
-```python 
+```python
 # Compute N
 n = 1
 for p_val in primes_arr:
     n *= p_val
-    
+
 # Compute phi(N)
 phi = 1
 for p_val in primes_arr:
@@ -211,7 +211,7 @@ private exponent: 40859905048514713393076723343041397865525761271013515316827399
 
 We can now decrypt each RSA encrypted message:
 
-```python 
+```python
 with open("chat_log-orig.json", "rb") as f:
     messages = json.load(f)
 

@@ -24,15 +24,17 @@ Let's dive into how this obfuscation works.
 ## Recovering the Control Flow Graph
 
 As the code of this binary seems very fragmented and all over the place, my first goal was to get an idea how control flow is realized.
-If we look in the listing of the main function, we can see at the very end "end" a `JMP RAX` instruction:
+If we look in the listing of the main function, we can see at the very "end" a `JMP RAX` instruction:
 
 ![](img/03.png)
 
 If we can figure out all possible values that `RAX` can take, we know the outgoing edges of this "basic block".
 This means we need to figure out all the expression that is responsible for computing the value of `RAX` so that we can emulate this.
-Effectively, this means we need to go back up the listing until we find the start of the expression, and then execute the program as normal.
+Effectively, this means we need to go back up the listing until we find the start of the expression, and then execute (i.e., emulate) the program as normal.
 
 ![](img/04.png)
+
+We could eye-ball for every block where each expression starts, but since there are a plethora of these cases throughout the entire binary, we should come up with a way to do this automatically.
 
 To do this automatically, we can apply some basic version of [liveness analysis](https://en.wikipedia.org/wiki/Live-variable_analysis) on the general purpose registers.
 Starting at the address of `JMP RAX`, we can treat `RAX` as an unknown variable and put it in a pool of unknown registers that are still unaccounted for.
@@ -285,7 +287,7 @@ Sadly, looking into the CFG of this function reveals its a bunch of spaghetti wi
 ![](img/15.png)
 
 This is bad news, because it means we probably have to dive into the actual code to figure out what's going on.
-It is also good news though, because it also likely means it will not be a function that is operating on complex data structures.
+It is also good news though, because it also likely means it will not be a function that is operating on complex data structures or external WinAPIs.
 Analyzing its behavior of it should therefore be doable.
 
 
@@ -293,26 +295,28 @@ Analyzing its behavior of it should therefore be doable.
 
 Before diving deep into unknown code, I like to get a feeling of how the function is called and how it behaves with different inputs.
 
-From some trial and error in x64dbg, you can easily figure out that the first call to `magic_function` (at `0000000140015E99`) in the button press handler function is simply a call with the current digit index (starting at 1) as argument (Note the last 16 bits of the second argument / RDX as displayed in x64dbg):
+From some trial and error in x64dbg, you can easily figure out that the first call to `magic_function` (at `0x140015E99`) in the button press handler function is simply a call with the current digit index (starting at 1) as argument (Note the last 16 bits of the second argument / RDX as displayed in x64dbg):
 
 ![](img/16.gif)
 
-Similarly, in the second `magic_function` call (at `0000000140016766`), the expression `(index << 8 | digit_ascii_char)` is used as argument instead:
+Similarly, in the second `magic_function` call (at `0x140016766`), the expression `(index << 8 | digit_ascii_char)` is used as argument instead:
 
 ![](img/17.gif)
 
 Additionally, the `magic_function` seems to be completely deterministic. That is, the same input number always provides the same output value.
 
-While the code is heavily obfuscated, we can record two instruction traces using x64dbg with two different inputs, and put them side by side to quickly identify the parts that are directly influenced by the input parameter.
-Then, for each of these chunks, since all operations in this function are pretty linear, we can infer the underlying tranformation pretty easily with some educated guessing.
+While the code is heavily obfuscated, we can still make sense of it without fully deobfuscating all code.
+One way to do this, is to record two instruction traces using x64dbg with two different inputs, and put them side by side to quickly identify the parts that are directly influenced by the input parameter.
+Every chunk that is _exactly_ the same, means that the code was not influenced by the input at all, and thus is likely not really relevant for us to understand the overall algorithm.
+However, for each chunk that does operate on different concrete values, it means they were influenced by the input and these are therefore the chunks we are interested in.
 
-For instance, here are parts of two traces with input `0x1337` (left) and `0x1234` (right):
+For instance, here is a chunk of code of two traces with input `0x1337` (left) and `0x1234` (right) that had the same instructions executed but different input/output values:
 
 ![](img/17.png)
 
-Without trying to understand the instructions one-by-one, we can simply observe the input and output of both two chunks and identify similarities.
-Then, we can guess that this operation really encodes the operation:
-```
+Since all operations in this chunk are pretty linear, we can infer the underlying tranformation pretty easily with some educated guessing.
+It so turns out that for this chunk, we can guess that this operation really encodes the operation:
+```python
 x = (x ^ 0x3d)
 ```
 
@@ -356,10 +360,10 @@ def checksum(s: bytes) -> int:
 
 We know the algorithm, we know the expected final value (`0x5b735c36628fcab`), now it is just a matter of finding the right input sequence that results in the right hash value.
 
-To do this, we can observe a couple key insights:
+To do this, we can observe a couple key insights about the whole construction:
 - `magic` is very simple and deterministic.
-- All calls to `magic(i)` form a constant sequence independent of the pass code.
-- While `magic(i << 8 | c)` is not constant (it depends on the input character), there are only 10 possible digits (`0`-`9`) for each character in the pass code. Furthermore, it also does not depend on any previous characters.
+- This means all calls to `magic(i)` form a constant sequence independent of the pass code.
+- While `magic(i << 8 | c)` is not constant (it depends on the input character), there are only 10 possible digits (`0`-`9`) for each character in the pass code. Furthermore, it also does not depend on the result of any of the previous digits.
 - Finally, the checksum is computed by using 64-bit additions, which has a very low chance for wrapping around given the values that `magic` returns.
 
 As each digit in the checksum is used independently of each other in the final checksum, each digit will have a unique but fixed _contribution_ to the final summation.
@@ -430,3 +434,11 @@ The [full script](scripts/solve.py) spits out the right answer almost instantane
 Typing in the passcode reveals the flag:
 
 ![](img/19.png)
+
+
+## Final Words
+
+I really liked this challenge.
+The obfuscation looks very scary, but extracting an auxiliary CFG from the code allows us to ignore most of it and pinpoint the places we need to zoom into very quickly, regardless of how much spaghetti there really is.
+After dynamically analyzing the checksum algorithm, I was almost a bit disappointed how simple it was :p. However, even with that in mind, it was still not too trivial to find the final passcode.
+Overall, very cool and hope to see more of this type in the future.

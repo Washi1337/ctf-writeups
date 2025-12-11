@@ -10,8 +10,12 @@ layout: default
 **Tools used:** Ghidra
 
 Challenge 5 is where we finally start reversing real binaries for this year.
-You are presented with an executable of a whopping 16MB large.
-Rather than diving into the code immediately, let's first get a feeling of what this thing is doing.
+You are presented with an executable file that stores roughly 16MB, that asks for a password:
+
+![](img/01.png)
+
+This is a really great mid-tier difficulty challenge, perhaps one of my favorites.
+Let's dive in.
 
 
 ## Orientation
@@ -19,8 +23,6 @@ Rather than diving into the code immediately, let's first get a feeling of what 
 Running the binary without any parameters reveals two things.
 Firstly, the program expects a password as the first commandline argument.
 Secondly, there seems to be some interesting extra flag `-r` seemingly to reset the challenge "in case of weird behavior":
-
-![](img/01.png)
 
 Typing in a password reveals that this password needs to be 16 characters long.
 
@@ -52,7 +54,7 @@ This turns out to be very straight forward, as these strings are immediately use
 ![](img/05.png)
 
 In this code, we can immediately identify based on the read function calls that the `position` and `transitions` data streams are merely containing a single `uint64`.
-Furthermore, based on the if statements that follow that the win condition for this challenge is to make the values of both the `position` and `transitions` streams 16 (`0x10`).
+Furthermore, based on the if statements that follow, the win condition for this challenge is to make the values of both the `position` and `transitions` streams 16 (`0x10`).
 
 A little further down we also see that `state` is also just an `uint64`:
 
@@ -77,7 +79,7 @@ However, more importantly, it is also very likely that the challenge author also
 In other words, there must be a pattern that we can recognize and use to our advantage.
 Therefore, let's just explore the first state and see if there are any similarities with other states.
 
-If we look at state 0 (RVA `860241` and thus at `140860241`), we see that the decompiler has a bit of trouble understanding exactly what is going on.
+If we look at state 0 (RVA `0x860241` and thus `FUN_140860241`), we see that the decompiler has a bit of trouble understanding exactly what is going on.
 
 ![](img/09.png)
 
@@ -108,13 +110,15 @@ First, we see that the outgoing edges for this state 0 are now very clearly defi
 The second important fact here is that `transitions` variable is only updated when one of the outgoing edges is actually taken.
 Recall from earlier that we needed both `position` and `transitions` to be equal to 10.
 This implies we should never hit the `else` block of this long if chain.
-This also means that, to get to our good boy message, we need to type in a password of 16 characters that result in exactly 16 valid transitions to be made in the state machine.
+Finally, after writing all the new values of `position`, `state` and `transitions` the program restarts itself, effectively executing the next state
+
+This means that, to get to our good boy message, we need to type in a password of 16 characters that result in exactly 16 valid transitions to be made in the state machine.
 
 
 ## Exploring the State Space
 
 This challenge now has turned into a classic search problem that you can find in any CompSci algorithms course.
-We need to parse the entire state machine implied by all edges, and use a search algorithm like Breath-First-Search to find all paths that are exactly 16 characters long.
+We need to parse the entire state machine, extract all the edges implied by the code in each state handler function, and use a search algorithm like Breath-First-Search to find all paths that are exactly 16 characters long.
 We can all do this in a Ghidra script.
 
 First, we need to extract the entry points of all state handler functions in the binary.
@@ -188,7 +192,45 @@ private HashMap<Integer, Map<Byte, Integer>> buildGraph(int[] rvas, FunctionMana
 }
 
 private Map<Byte, Integer> parseNextStates(Address address) throws Exception {
-    // ...
+    var result = new HashMap<Byte, Integer>();
+
+    int max = 0; // sanity check.
+
+    var listing = currentProgram.getListing();
+    var iterator = listing.getInstructions(address, true);
+    while (max < 100 && iterator.hasNext()) {
+        max++;
+
+        // Get next instruction.
+        var instruction = iterator.next();
+        var formatted = instruction.toString();
+
+        // Check if we reached the end of the if statements.
+        if (formatted.startsWith("JMP")) {
+            break;
+        }
+
+        // Check if we are at the next CMP+JZ instruction sequence.
+        if (formatted.startsWith("CMP byte ptr [RSP + ")) {
+            // Extract comparator (excuse my ugly parsing code :-))
+            byte value = Byte.parseByte(formatted.split(",0x")[1], 16);
+
+            formatted = iterator.next().toString();
+            if (formatted.startsWith("JZ")) {
+                // Extract branch target.
+                var target = currentProgram.getAddressFactory().getAddress(formatted.split(" ")[1]);
+
+                // Find the assignment of the next state variable behind the jump target.
+                formatted = listing.getInstructionAt(target).toString();
+                if (formatted.startsWith("MOV qword ptr [RSP + ")) {
+                    var nextState = Integer.parseInt(formatted.split(",0x")[1], 16);
+                    result.put(value, nextState);
+                }
+            }
+        }
+    }
+
+    return result;
 }
 ```
 
@@ -209,8 +251,10 @@ class State {
     }
 }
 
+// Build the entire state machine graph.
 var machine = buildGraph(rvas, manager);
 
+// Explore using BFS
 var agenda = new ArrayDeque<State>();
 agenda.add(new State(0, ""));
 
@@ -218,11 +262,13 @@ println("Exploring graph");
 while (!agenda.isEmpty()) {
     var current = agenda.remove();
 
+    // Are we at the desired length? Print the current path.
     if (current.path.length() == 16) {
         println(current.path);
         continue;
     }
 
+    // If not, keep looking.
     var transitions = machine.get(current.state);
     for (var transition : transitions.entrySet()) {
         byte c = transition.getKey();

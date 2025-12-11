@@ -13,9 +13,12 @@ Challenge 3 is probably my least favorite challenge of this year.
 It is very much a guessing game on what you need to do and what tools you need to use.
 
 You are served a horribly broken PDF file which behaves differently in different PDF readers, that contains the text "Flare-On!".
-Okular so happens to be one of the few that is actually able to dispay it:
+[Okular](https://okular.kde.org/) so happens to be one of the very few that is actually able to dispay it:
 
 ![](img/00.png)
+
+Nothing on the visual side of the PDF shows any signs of a flag though.
+Clearly there must be something hidden in the file.
 
 
 ## Finding the Hidden Data
@@ -24,7 +27,7 @@ Looking into the file itself, the file seems to be intentionally "obfuscated" (f
 
 ![](img/01.png)
 
-I wish I had a nice and structured way of solving this challenge, but it really came down to painstakingly trying out all the tools I could find on Google, until finally finding one that eventually works.
+I wish I had a nice and structured way of solving this next step, but it really came down to painstakingly trying out all the PDF tools I could find on Google, until finally finding one that eventually works.
 
 For me that was [qpdf](https://github.com/qpdf/qpdf):
 
@@ -32,11 +35,11 @@ For me that was [qpdf](https://github.com/qpdf/qpdf):
 $ qpdf --decrypt pretty_devilish_file.pdf output.pdf
 ```
 
-This gives us a way cleaner PDF file, that also reveals a hidden compressed image:
+This gives us a way cleaner PDF file, that also reveals a hidden compressed image in stream 4 of the file:
 
 ![](img/02.png)
 
-Carving out this image using a hex editor, we can inflate the buffer
+Since the stream is marked by `/FlateDecode`, we can carve out this image using a hex editor and inflate the buffer using `zlib`:
 
 ```python
 import zlib
@@ -46,13 +49,13 @@ compressed = bytes.fromhex("78 9C C5 52 3B 4F 03 31 0C DE FD 2B C2 04 0C 55 9C C
 print(zlib.decompress(compressed))
 ```
 
-This reveals some bitmap image data:
+This reveals some raw JPEG image data (recognizeable from the JFIF header `FF D8 FF E0 00 10 4A 46 49 46 00 01`):
 
 ```
 b"q 612 0 0 10 0 -10 cm\nBI /W 37/H 1/CS/G/BPC 8/L 458/F[\n/AHx\n/DCT\n]ID\nffd8ffe000104a46494600010100000100010000ffdb00430001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101ffc0000b080001002501011100ffc40017000100030000000000000000000000000006040708ffc400241000000209050100000000000000000000000702050608353776b6b7030436747577ffda0008010100003f00c54d3401dcbbfb9c38db8a7dd265a2159e9d945a086407383aabd52e5034c274e57179ef3bcdfca50f0af80aff00e986c64568c7ffd9\nEI Q \n\nq\nBT\n/ 140 Tf\n10 10 Td\n(Flare-On!)'\nET\nQ\n"
 ```
 
-We can carve out again the compressed pixel data and turn it into an image file:
+We can carve out again the compressed pixel data and turn it into a bitmap image file:
 
 ```python
 from PIL import Image

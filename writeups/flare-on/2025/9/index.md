@@ -47,6 +47,24 @@ If it doesn't return `true`, the program exits early, meaning we should make all
 
 Let's start simple and decompress all the embedded DLLs.
 
+First, we need to extract all the embedded DLLs from the file.
+We can do this with a simple AsmResolver script:
+
+```csharp
+using AsmResolver;
+using AsmResolver.PE;
+
+var image = PEImage.FromFile("10000.exe");
+foreach (var resource in image.Resources.GetDirectory(ResourceType.RcData).Entries.OfType<ResourceDirectory>())
+{
+    Console.WriteLine(resource.Id);
+    byte[] data = ((IReadableSegment) resource.GetData(1033).Contents).ToArray();
+    File.WriteAllBytes($@"compressed\{resource.Id:0000}.bin", data);
+}
+```
+
+![](img/20.png)
+
 Looking into the loader function `load_pe_from_resource` (`FUN_140001482`), we can see a basic construction of loading the resource data, decompressing and finally manual mapping the DLL into memory:
 
 ![](img/04.png)
@@ -91,7 +109,7 @@ internal class Program
         for (int i = 0; i < 10000; i++)
         {
             // Read out resource data.
-            byte[] compressed = File.ReadAllBytes($@"compressed\resource{i:0000}.bin");
+            byte[] compressed = File.ReadAllBytes($@"compressed\{i:0000}.bin");
             fixed (byte* pCompressed = compressed)
             {
                 // Determine decompressed size.
@@ -105,7 +123,7 @@ internal class Program
                 }
 
                 // Write back to disk.
-                File.WriteAllBytes($"decompressed\{i:0000}.dll", decompressed);
+                File.WriteAllBytes($@"decompressed\{i:0000}.dll", decompressed);
             }
         }
         Console.WriteLine("Done!");
@@ -115,7 +133,7 @@ internal class Program
 
 This works great, we now have 10,000 decompressed DLLs.
 
-TODO: image
+![](img/21.png)
 
 
 ## Investigating a single DLL
@@ -175,6 +193,7 @@ There is a [huge formula for the determinant of a 4x4 matrix](https://semath.inf
 
 Hmm, multiplications and additions for which the result needs to be 0, similar to that previous sanity check we found earlier!
 From here I didn't check all the terms of the formula, the expression looked similar enough that I just assumed that whatever code we saw before, it is the determinant check.
+This also means, we don't really have to care for reversing it either, which saves us quite a bit of time :).
 
 Now we have accounted for everything that is happening in each `check` function.
 Time to reverse everything!
@@ -315,17 +334,9 @@ for iteration in tqdm.tqdm(range(10000)):
 
 ... and it should work right?
 
+![](img/22.png)
 
-TODO: image
-
-Hmmm.... let's look into x64dbg and see at which check it fails.
-
-TODO: image
-
-Yikes! It only passes the first 2 checks or so..
-
-Why??!
-
+Yikes!
 
 ## Figuring out the Missing Pieces
 
@@ -376,20 +387,19 @@ sum[10000] = c[10000][1]*x[1] + c[10000][2]*x[2] + ... + c[10000][10000]*x[10000
 
 Now, we have a system of 10,000 equations with 10,000 known sums, 10,000 unknown variables, and 10,000 x 10,000 known coefficients derived from the dependency graph of all embedded DLLs.
 The trick is now to treat these 10,000 x 10,000 coefficients as a [coefficient matrix](https://en.wikipedia.org/wiki/Coefficient_matrix).
-
-- Download: [coeffs.zip](dumps/coeffs.zip)
-
-The entire equation can be expressed as a typical matrix * vector multiplication `sum = C * x`.
+The entire equation can then be expressed as a matrix * vector equation `sum = C * x`.
 
 ```
     sum       =             C            *     x
 
 [   sum0   ]     [ 1 0 0 1 0 0 1 0 0 0 ]   [   x0   ]
-[   sum0   ]     [ 0 0 0 0 0 0 0 0 0 0 ]   [   x1   ]
-[   sum0   ]  =  [ 0 0 0 1 1 0 0 0 1 1 ] * [   x2   ]
+[   sum1   ]     [ 0 0 0 0 0 0 0 0 0 0 ]   [   x1   ]
+[   sum2   ]  =  [ 0 0 0 1 1 0 0 0 1 1 ] * [   x2   ]
 [    ..    ]     [         ...         ]   [   ..   ]
 [ sum10000 ]     [ 0 0 0 1 0 0 0 0 0 0 ]   [ x10000 ]
 ```
+
+- Download: [coeffs.zip](dumps/coeffs.zip)
 
 Why do we do this transformation?
 

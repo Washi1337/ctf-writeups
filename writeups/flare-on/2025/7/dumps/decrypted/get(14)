@@ -1,0 +1,1 @@
+{"msg": "cmd", "d": {"cid": 2, "line": "systeminfo | findstr /B /C:\"OS Name\" /C:\"OS Version\""}}

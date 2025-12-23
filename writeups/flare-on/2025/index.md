@@ -5,7 +5,7 @@ layout: default
 
 # Flare-On 2025
 
-This directory contains write-ups with my solutions for Flare-On 2024 that was hosted by Google Cloud Security / Mandiant from September 27 to October 27 2025.
+This directory contains write-ups with my solutions for Flare-On 2025 that was hosted by Google Cloud Security / Mandiant from September 27 to October 27 2025.
 
 ## Table of Contents
 

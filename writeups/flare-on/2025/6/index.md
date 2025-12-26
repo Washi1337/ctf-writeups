@@ -26,7 +26,7 @@ A quick DIE check will tell you this is a PyInstaller executable:
 
 ![](img/03.png)
 
-As such we can run [pyinstxtractor(https://github.com/extremecoders-re/pyinstxtractor) to extract all the files.
+As such we can run [pyinstxtractor](https://github.com/extremecoders-re/pyinstxtractor) to extract all the files.
 This reveals a `challenge_to_compile.pyc` that likely contains the main code, which we can decompile using [PyLingual](https://pylingual.io).
 
 - [decompiled.py](decompiled.py)

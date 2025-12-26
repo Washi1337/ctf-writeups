@@ -10,12 +10,12 @@ layout: default
 **Tools used:** Python
 
 This year's CAPTCHA challenge is a game where you have to drill for "lost bears" in the ground.
-If you hit a builder instead of reaching till the end, you lose the game and have to start over again:
+If you hit a boulder instead of reaching till the end, you lose the game and have to start over again:
 
 ![](img/01.png)
 
 The program is written in Python, and all the source code is available in plaintext.
-Particularly, if we look at the code that is responsible for setting up the builders in each level at line 212, we see that the `boulder_layout` array holds for each column the depth each boulder is placed.
+Particularly, if we look at the code that is responsible for setting up the boulders in each level at line 212, we see that the `boulder_layout` array holds for each column the depth each boulder is placed.
 
 ![](img/02.png)
 
